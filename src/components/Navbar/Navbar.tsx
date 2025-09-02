@@ -15,23 +15,38 @@ export default function Navbar() {
       <Toolbar sx={{ flexDirection: "column", alignItems: "center", gap: 2 }}>
         {/* Nombre */}
         <Typography
-          variant="h5"
+          variant="h4" 
           sx={{
-            fontFamily: "Century Schoolbook",
+            fontFamily: "'Inconsolata', monospace",
             color: "white",
             textAlign: "center",
+            paddingY: 1,
+            marginTop: 6, // separa el nombre del borde superior del navbar
           }}
         >
           <a href="/" style={{ color: "inherit", textDecoration: "none" }}>
-            Ale Vezquez
+            Ale Vazquez
           </a>
         </Typography>
 
+
+
         {/* Menú principal */}
-        <Box sx={{ display: "flex", gap: 4 }}>
+        <Box component="nav" sx={{ display: "flex", gap: 4 }}>
           <SubMenu label="Fotografía" items={submenuFotografia} basePath="/fotografia" />
           <SubMenu label="Work" items={submenuWork} basePath="/work" />
+          <Typography
+            sx={{
+              color: "white",
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 500,
+              fontSize: "1rem",
+              "&:hover": { color: "#aaa" },
+            }}
+          >
+          </Typography>
         </Box>
+
       </Toolbar>
     </AppBar>
   );

@@ -19,7 +19,7 @@ export default function Gallery({ items }: GalleryProps) {
           <Image
             src={item.src}
             alt={item.alt}
-            width={500}
+            width={300}
             height={500}
             style={{ width: "100%", height: "auto", display: "block", objectFit: "cover" }}
           />

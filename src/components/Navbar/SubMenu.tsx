@@ -31,7 +31,7 @@ export default function SubMenu({ label, items, basePath }: SubMenuProps) {
       <Button
         sx={{
           color: "white",
-          fontFamily: "'Montserrat', sans-serif",
+          fontFamily: "'Inconsolata', monospace",
           textTransform: "none",
           fontWeight: 500,
           fontSize: "1rem",
@@ -59,7 +59,7 @@ export default function SubMenu({ label, items, basePath }: SubMenuProps) {
           sx: {
             backgroundColor: "black",
             color: "white",
-            borderRadius: 2,
+            borderRadius: 0,
             paddingY: 1,
             minWidth: 180,
             boxShadow: "0 8px 20px rgba(0,0,0,0.5)",
@@ -77,7 +77,7 @@ export default function SubMenu({ label, items, basePath }: SubMenuProps) {
             onClick={handleClose}
             sx={{
               color: "white",
-              fontFamily: "'Montserrat', sans-serif",
+              fontFamily: "'Inconsolata', monospace",
               fontWeight: 400,
               fontSize: "0.95rem",
               transition: "background-color 0.2s ease",
