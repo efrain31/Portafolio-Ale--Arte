@@ -7,15 +7,15 @@ import Box from "@mui/material/Box";
 import SubMenu from "./SubMenu";
 
 export default function Navbar() {
-  const submenuFotografia = ["Arte", "Comida", "JPG Photos", "Stills", "Estudio"];
-  const submenuWork = ["Restauraciones", "Publicidad Arte"];
+  const submenuFotografia = ["ART GALLERY", "FOOD", "JPG PHOTOS", "PHOTOSHOOT", "STILLS (BTS)", "STUDIO PHOTOSHOOT"];
+  const submenuWork = ["RESTORATIONS", "ADVERTISING & ART"];
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "black", paddingY: 2 }}>
       <Toolbar sx={{ flexDirection: "column", alignItems: "center", gap: 2 }}>
         {/* Nombre */}
         <Typography
-          variant="h4" 
+          variant="h4"
           sx={{
             fontFamily: "'Inconsolata', monospace",
             color: "white",
@@ -33,8 +33,28 @@ export default function Navbar() {
 
         {/* Menú principal */}
         <Box component="nav" sx={{ display: "flex", gap: 4 }}>
-          <SubMenu label="Fotografía" items={submenuFotografia} basePath="/fotografia" />
-          <SubMenu label="Work" items={submenuWork} basePath="/work" />
+          <Box component="nav" sx={{ display: "flex", gap: 4 }}>
+            <SubMenu
+              label="Fotografía ┃ Photograph"
+              items={submenuFotografia}
+              basePath="/fotografia"
+              mainPath="/fotografia"
+            />
+            <SubMenu
+              label="Trabajos ┃ Work"
+              items={submenuWork}
+              basePath="/work"
+              mainPath="/work"
+            />
+            <SubMenu
+              label="Sobre mi ┃ About me"
+              items={["ALE VAZQUEZ", "CONTACT"]}
+              basePath="/about"
+              mainPath="/about"
+            />
+          </Box>
+
+
           <Typography
             sx={{
               color: "white",

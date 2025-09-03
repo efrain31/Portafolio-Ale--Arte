@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { motion, AnimatePresence } from "framer-motion";
-import { ImageData } from "@/data/data";
+import { ImageData } from "@/Data/data";
 
 interface ImageGridProps {
   images: ImageData[];

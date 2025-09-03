@@ -36,7 +36,7 @@ export default function Footer() {
             fontWeight: 500,
           }}
         >
-          © 2025 Ale Vezquez
+          © 2025 Ale Vazquez
         </Typography>
 
         {/* Iconos con links */}
