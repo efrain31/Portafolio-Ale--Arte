@@ -1,0 +1,65 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #fff;
+  color: #333;
+  padding: 20px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.filters button {
+  padding: 5px 10px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.filters button.active {
+  background: #000;
+  color: #fff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  overflow: hidden;
+}
+
+.grid img {
+  width: 100%;
+  display: block;
+  filter: grayscale(100%) brightness(20%);
+  transition: filter 0.5s ease, transform 0.3s ease;
+}
+
+.grid img:hover {
+  filter: grayscale(0%) brightness(100%);
+  transform: scale(1.05);
+}
+
+.grid .item {
+  position: relative;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.5s ease;
+}
+
+.grid .item .title {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 12px;
+}

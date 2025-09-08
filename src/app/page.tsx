@@ -1,16 +1,5 @@
-import { Box } from "@mui/material";
-import ImageGrid from "../components/Galerias/ImagenGrid";
-import SocialIcons from "../../src/components/Icons/Socialicons";
-import { imagesData } from "@/Data/data";
-import Footer from "@/components/Footer/Footer";
-
-export default function Page() {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <div style={{ flex: 1 }}>
-        <ImageGrid images={imagesData} />
-      </div>
-      <Footer />
-    </div>
-  );
+// src/app/page.tsx
+export default function HomePage() {
+  // no hace falta renderizar nada porque RootLayout ya se encarga de mostrar ImageGrid
+  return null;
 }

@@ -1,6 +1,9 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
+import EmailIcon from "@mui/icons-material/Email";
+import InstagramIcon from "@mui/icons-material/Instagram";
+
 
 export default function Footer() {
   return (
@@ -46,29 +49,14 @@ export default function Footer() {
             href="https://www.instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ display: "inline-block" }}
+            style={{ color: "white" }}
           >
-            <img
-              src="/images/instagram.png"
-              alt="Instagram"
-              width={50}
-              height={50}
-              style={{ display: "block" }}
-            />
+            <InstagramIcon sx={{ fontSize: 50 }} />
           </a>
 
           {/* Gmail */}
-          <a
-            href="mailto:tuemail@gmail.com"
-            style={{ display: "inline-block" }}
-          >
-            <img
-              src="/images/gmail2.png"
-              alt="Gmail"
-              width={50}
-              height={50}
-              style={{ display: "block" }}
-            />
+          <a href="mailto:tuemail@gmail.com" style={{ color: "white" }}>
+            <EmailIcon sx={{ fontSize: 50 }} />
           </a>
         </Box>
       </Box>

@@ -1,19 +1,41 @@
-import PhotographyGallery from "@/Page/Photography/PhotographyGallery";
-import FoodGallery from "@/Page/Photography/FoodGallery";
-import WorksRestauraciones from "@/Page/Works/WorksRestauraciones";
-import WorksPublicidad from "@/Page/Works/WorksPublicidad";
-import About from "@/Page/Info/About";
+//INDEX
+import ImageGrid from "@/Page/Photography/index";
+
+//PAGES
+import PhotographyGallery from "@/Page/Photography/Artegalery";
+import FoodGallery from "@/Page/Photography/Food";
+import JPGGallery from "@/Page/Photography/Jpg";
+import PHOTOSHOOTGallery from "@/Page/Photography/Photoshoot";
+import STILLSGallery from "@/Page/Photography/Stills";
+import SUTDIOGallery from "@/Page/Photography/Studio";
+//WORKS
+import WorksRestauraciones from "@/Page/Works/Restauraciones";
+import WorksPublicidad from "@/Page/Works/Publicidad";
+//INFO
+import About from "@/Page/Info/About-me";
+import ALE from "@/Page/Info/AleVazquez";
+
+
+const normalizeSlug = (s: string) =>
+  s.toLowerCase().replace(/\s+/g, "-").replace(/[()&]/g, "").replace(/--+/g, "-");
 
 export const routesMap: Record<string, Record<string, React.ComponentType>> = {
   fotografia: {
-    "art-gallery": PhotographyGallery,
-    food: FoodGallery,
+    [normalizeSlug("ART GALLERY")]: PhotographyGallery,
+    [normalizeSlug("FOOD")]: FoodGallery,
+    [normalizeSlug("JPG PHOTOS")]: JPGGallery,
+    [normalizeSlug("PHOTOSHOOT")]: PHOTOSHOOTGallery,
+    [normalizeSlug("STILLS (BTS)")]:  STILLSGallery,
+    [normalizeSlug("STUDIO PHOTOSHOOT")]: SUTDIOGallery,
+    [normalizeSlug("Index")]: ImageGrid,
   },
   work: {
-    restauraciones: WorksRestauraciones,
-    "publicidad-arte": WorksPublicidad,
+    [normalizeSlug("RESTORATIONS")]: WorksRestauraciones,
+    [normalizeSlug("ADVERTISING")]: WorksPublicidad,
   },
   info: {
-    "about-me": About,
+    [normalizeSlug("ABOUT")]: About,
+    [normalizeSlug("CONTACT")]: ALE,
+
   },
 };

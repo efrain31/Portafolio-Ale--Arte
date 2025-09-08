@@ -2,9 +2,9 @@
 
 import { Box, Typography } from "@mui/material";
 import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { artImagesData } from "@/Data/data";
+import { indexImagesData } from "@/Data/data";
 
-export default function PhotographyGallery() {
+export default function IndexGallery() {
   return (
     <Box
       sx={{
@@ -25,9 +25,8 @@ export default function PhotographyGallery() {
             color: "white",
           }}
         >
-          ART GALLERY
         </Typography>
-       <ImageGrid images={artImagesData} />
+       <ImageGrid images={indexImagesData} />
       </Box>
     </Box>
   );

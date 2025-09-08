@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { Menu, MenuItem, Typography, Box } from "@mui/material";
 import Link from "next/link";
+import { routesMap } from "@/Data/routes";
 
 interface SubMenuProps {
-  label: string;    
+  label: string;
   items?: string[];
-  basePath?: string;
-  mainPath?: string;
+  basePath?: string; // Ej: "fotografia", "work", "info"
+  mainPath?: string; // ruta principal opcional
 }
 
 export default function SubMenu({
@@ -18,30 +19,22 @@ export default function SubMenu({
   mainPath = "",
 }: SubMenuProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [showAlt, setShowAlt] = useState(true); 
+  const [showAlt, setShowAlt] = useState(true);
 
-  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
   const [mainLabel, altLabel] = label.split("┃").map((part) => part.trim());
 
-  // Aparece al inicio y cada 20s durante 3s
+  // Aparece al inicio y luego cada 20s
   useEffect(() => {
     if (!altLabel) return;
 
-    // ⏳ Ocultar después de 3s al inicio
     const initialTimeout = setTimeout(() => setShowAlt(false), 9000);
-
-    // ⏳ Intervalo cada 20s
     const interval = setInterval(() => {
       setShowAlt(true);
       setTimeout(() => setShowAlt(false), 3000);
-    }, 90000);
+    }, 20000);
 
     return () => {
       clearTimeout(initialTimeout);
@@ -50,17 +43,9 @@ export default function SubMenu({
   }, [altLabel]);
 
   return (
-    <div
-      onMouseEnter={handleOpen}
-      onMouseLeave={handleClose}
-      style={{ display: "inline-block" }}
-    >
-      <Link
-        href={mainPath || "#"}
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
+    <div onMouseEnter={handleOpen} onMouseLeave={handleClose} style={{ display: "inline-block" }}>
+      <Link href={mainPath || "#"} style={{ textDecoration: "none", color: "inherit" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}>
-          {/* Texto principal */}
           <Typography
             sx={{
               color: "white",
@@ -73,8 +58,6 @@ export default function SubMenu({
           >
             {mainLabel}
           </Typography>
-
-          {/* Barra y texto alterno */}
           {altLabel && (
             <>
               <Typography sx={{ color: "white" }}>┃</Typography>
@@ -115,25 +98,28 @@ export default function SubMenu({
             },
           }}
         >
-          {items.map((item, index) => (
-            <MenuItem
-              key={index}
-              onClick={handleClose}
-              sx={{
-                color: "white",
-                fontFamily: "'Inconsolata', monospace",
-                fontSize: "0.95rem",
-                "&:hover": { backgroundColor: "#222" },
-              }}
-            >
-              <Link
-                href={`${basePath}/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                style={{ textDecoration: "none", color: "inherit" }}
+          {items.map((item, index) => {
+            // Genera el slug del item
+            const slug = item.toLowerCase().replace(/\s+/g, "-");
+            const path = `/${basePath}/${slug}`; // ruta final
+
+            return (
+              <MenuItem
+                key={index}
+                onClick={handleClose}
+                sx={{
+                  color: "white",
+                  fontFamily: "'Inconsolata', monospace",
+                  fontSize: "0.95rem",
+                  "&:hover": { backgroundColor: "#222" },
+                }}
               >
-                {item}
-              </Link>
-            </MenuItem>
-          ))}
+                <Link href={path} style={{ textDecoration: "none", color: "inherit" }}>
+                  {item}
+                </Link>
+              </MenuItem>
+            );
+          })}
         </Menu>
       )}
     </div>
