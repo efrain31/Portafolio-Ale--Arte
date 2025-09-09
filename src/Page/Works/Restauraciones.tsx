@@ -86,7 +86,7 @@ export default function Portfolio() {
           >
             <img
               src={photo.src}
-              alt={photo.title}
+              // alt={photo.title}
               style={{
                 width: "100%",
                 height: "100%",
@@ -98,7 +98,7 @@ export default function Portfolio() {
                 transition: "all 0.5s",
               }}
             />
-            <div
+            {/* <div
               className="title"
               style={{
                 position: "absolute",
@@ -112,7 +112,7 @@ export default function Portfolio() {
               }}
             >
               {photo.title}
-            </div>
+            </div> */}
           </div>
         ))}
       </div>
