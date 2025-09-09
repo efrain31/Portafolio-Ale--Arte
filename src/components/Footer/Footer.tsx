@@ -36,7 +36,7 @@ export default function Footer() {
           sx={{
             textAlign: "center",
             fontSize: "1.5rem",
-            fontWeight: 500,
+            fontWeight: 300,
           }}
         >
           © 2025 Ale Vazquez
@@ -51,12 +51,12 @@ export default function Footer() {
             rel="noopener noreferrer"
             style={{ color: "white" }}
           >
-            <InstagramIcon sx={{ fontSize: 50 }} />
+            <InstagramIcon sx={{ fontSize: 30 }} />
           </a>
 
           {/* Gmail */}
           <a href="mailto:tuemail@gmail.com" style={{ color: "white" }}>
-            <EmailIcon sx={{ fontSize: 50 }} />
+            <EmailIcon sx={{ fontSize: 30 }} />
           </a>
         </Box>
       </Box>

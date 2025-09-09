@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import FilterListIcon from '@mui/icons-material/FilterList';
 
 const photos = [
-  { src: "https://www.distritofoto.com/wp-content/uploads/2021/07/montejo-front.jpg", title: "LA MONTEJO", category: "alimentos" },
-  { src: "https://www.distritofoto.com/wp-content/uploads/2017/05/corporativa4.jpg", title: "IMPRENTA SELECTA", category: "corporativa" },
-  { src: "https://www.distritofoto.com/wp-content/uploads/2021/07/ajol-front.jpg", title: "AJOLOTIUS", category: "producto" },
-  { src: "https://www.distritofoto.com/wp-content/uploads/2021/07/hutfront.jpg", title: "H.U.T. INTERNACIONAL", category: "producto" },
-  { src: "https://www.distritofoto.com/wp-content/uploads/2021/07/hutfront.jpg", title: "TIENDA X", category: "ecommerce" },
-  { src: "https://www.distritofoto.com/wp-content/uploads/2021/07/hutfront.jpg", title: "EDIFICIO Y", category: "arquitectura" },
-  { src: "https://www.distritofoto.com/wp-content/uploads/2021/07/hutfront.jpg", title: "EVENTO Z", category: "eventos" },
-  { src: "https://www.distritofoto.com/wp-content/uploads/2021/07/hutfront.jpg", title: "FOOD W", category: "alimentos" },
+  { src: "/images/12.jpg", title: "LA MONTEJO", category: "alimentos" },
+  { src: "/images/14.jpg", title: "IMPRENTA SELECTA", category: "corporativa" },
+  { src:"/images/14.jpg", title: "AJOLOTIUS", category: "producto" },
+  { src: "/images/15.jpg", title: "H.U.T. INTERNACIONAL", category: "producto" },
+  { src: "/images/16.jpg", title: "TIENDA X", category: "ecommerce" },
+  { src: "/images/11.jpg", title: "EDIFICIO Y", category: "arquitectura" },
+  { src: "/images/12.jpg", title: "EVENTO Z", category: "eventos" },
+  { src: "/images/15.jpg", title: "FOOD W", category: "alimentos" },
 ];
 
 const categories = ["all", "producto", "ecommerce", "alimentos", "arquitectura", "corporativa", "eventos"];
@@ -25,7 +25,7 @@ export default function Portfolio() {
   ).slice(0, 8); // solo 8 imágenes
 
   return (
-    <div style={{ width: "83%", margin: "40px auto 0 auto", padding: "20px 0" }}>
+    <div style={{ width: "93%", margin: "40px auto 0 auto", padding: "20px 0" }}>
 
       {/* Filtros */}
       <div

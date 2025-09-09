@@ -3,19 +3,36 @@
 import { Box, Typography } from "@mui/material";
 import ImageGrid from "@/components/Galerias/ImagenGrid";
 import { artImagesData } from "@/Data/data";
+import { useState } from "react";
 
 export default function PhotographyGallery() {
+  // Estado para detectar orientación de la imagen seleccionada
+  const [orientation, setOrientation] = useState<"portrait" | "landscape">("landscape");
+
+  // Función que recibe la imagen al abrir el modal
+  const handleImageOpen = (img: { src: string; title: string }) => {
+    const image = new Image();
+    image.src = img.src;
+    image.onload = () => {
+      if (image.width > image.height) {
+        setOrientation("landscape");
+      } else {
+        setOrientation("portrait");
+      }
+    };
+  };
+
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        backgroundColor: "black", // fondo como el submenu
+        backgroundColor: "black",
         color: "white",
       }}
     >
-     <Box sx={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: 2 }}>
+      <Box sx={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: 2 }}>
         <Typography
           sx={{
             fontFamily: "'Inconsolata', monospace",
@@ -27,7 +44,7 @@ export default function PhotographyGallery() {
         >
           ART GALLERY
         </Typography>
-       <ImageGrid images={artImagesData} />
+        <ImageGrid images={artImagesData} onImageOpen={handleImageOpen} />
       </Box>
     </Box>
   );

@@ -22,9 +22,9 @@ const routesData = [
   },
   {
     label: "Modelaje ┃ Modeling",
-    basePath: "",
-    mainPath: "/",
-    items: ["", ""]
+    basePath: "model",
+    mainPath: "/Modeling",
+    items: ["MODEL"]
   }
 ];
 
