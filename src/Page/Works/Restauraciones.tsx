@@ -53,7 +53,7 @@ export default function Portfolio() {
               transition: "all 0.3s",
             }}
           >
-            {cat === "all" && <FilterListIcon style={{ fontSize: 18, color: "#fff" }} />}
+            {cat === "all" && <FilterListIcon style={{ fontSize: 30, color: "#fff" }} />}
             {cat.charAt(0).toUpperCase() + cat.slice(1)}
           </span>
         ))}
@@ -94,7 +94,7 @@ export default function Portfolio() {
                 filter:
                   hoveredIndex === index
                     ? "grayscale(0%) brightness(100%)"
-                    : "grayscale(100%) brightness(20%)",
+                    : "grayscale(50%) brightness(70%)",
                 transition: "all 0.5s",
               }}
             />
