@@ -12,13 +12,13 @@ const routesData = [
     label: "Trabajos ┃ Work",
     basePath: "work",
     mainPath: "/work",
-    items: ["RESTORATIONS", "ADVERTISING"]
+    items: ["RESTORATIONS", "ADS","ILUSTRATION"]
   },
   {
     label: "Sobre mi ┃ About me",
     basePath: "info",
     mainPath: "/about-me",
-    items: ["ABOUT", "CONTACT"]
+    items: ["ABOUT", "CONTACT","MODEL"]
   },
   {
     label: "Modelaje ┃ Modeling",

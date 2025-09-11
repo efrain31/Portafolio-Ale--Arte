@@ -94,7 +94,7 @@ export default function Portfolio() {
                 filter:
                   hoveredIndex === index
                     ? "grayscale(0%) brightness(100%)"
-                    : "grayscale(50%) brightness(70%)",
+                    : "grayscale(20%) brightness(90%)",
                 transition: "all 0.5s",
               }}
             />

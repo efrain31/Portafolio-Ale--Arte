@@ -8,7 +8,7 @@ export interface ImageData {
 
 // Galería de index
 export const indexImagesData: ImageData[] = [
-  { src: "/images/17.webp", title: "ataque", description: "bschbsajbcnjsanj 1" },
+  { src: "/images/13.webp", title: "ataque", description: "bschbsajbcnjsanj 1" },
   { src: "/images/4.webp", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/5.webp", title: "Imagen 3", description: "Descripción 3" },
   { src: "/images/3.webp", title: "Imagen 4", description: "Descripción 4" },
