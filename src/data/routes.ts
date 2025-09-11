@@ -11,6 +11,7 @@ import SUTDIOGallery from "@/Page/Photography/Studio";
 //WORKS
 import WorksRestauraciones from "@/Page/Works/Restauraciones";
 import WorksPublicidad from "@/Page/Works/Publicidad";
+import WorksIlustration from "@/Page/Works/Ilustration";
 //INFOS
 import About from "@/Page/Info/About-me";
 import ALE from "@/Page/Info/AleVazquez";
@@ -34,15 +35,16 @@ export const routesMap: Record<string, Record<string, React.ComponentType>> = {
   },
   work: {
     [normalizeSlug("RESTORATIONS")]: WorksRestauraciones,
-    [normalizeSlug("ADVERTISING")]: WorksPublicidad,
+    [normalizeSlug("ADS")]: WorksPublicidad,
+    [normalizeSlug("ILLUSTRATION")]: WorksIlustration,
   },
   info: {
     [normalizeSlug("ABOUT")]: About,
     [normalizeSlug("CONTACT")]: ALE,
-
-  },
-   model: {
     [normalizeSlug("MODEL")]: MODEL,
-
   },
+  //  model: {
+  //   [normalizeSlug("MODEL")]: MODEL,
+
+  // },
 };

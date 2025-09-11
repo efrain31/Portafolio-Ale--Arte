@@ -2,9 +2,9 @@
 
 import { Box, Typography } from "@mui/material";
 import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { PublicidadImagesData } from "@/Data/data";
+import { IlustrationImagesData } from "@/Data/data";
 
-export default function ADVERTISINGARTGallery() {
+export default function ILUSTRATIONGallery() {
     return (
         <Box
             sx={{
@@ -26,10 +26,10 @@ export default function ADVERTISINGARTGallery() {
                         color: "white",
                     }}
                 >
-                    ADS & ART
+                    ILLUSTRATION GALLERY
                 </Typography>
                 {/* Galería */}
-                <ImageGrid images={PublicidadImagesData} />
+                <ImageGrid images={IlustrationImagesData} />
             </Box>
         </Box>
     );

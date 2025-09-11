@@ -12,20 +12,20 @@ const routesData = [
     label: "Trabajos ┃ Work",
     basePath: "work",
     mainPath: "/work",
-    items: ["RESTORATIONS", "ADS","ILUSTRATION"]
+    items: ["RESTORATIONS", "ADS", "ILLUSTRATION"]
   },
   {
     label: "Sobre mi ┃ About me",
     basePath: "info",
     mainPath: "/about-me",
-    items: ["ABOUT", "CONTACT","MODEL"]
+    items: ["ABOUT", "CONTACT", "MODEL"]
   },
-  {
-    label: "Modelaje ┃ Modeling",
-    basePath: "model",
-    mainPath: "/Modeling",
-    items: ["MODEL"]
-  }
+  // {
+  //   label: "Modelaje ┃ Modeling",
+  //   basePath: "model",
+  //   mainPath: "/Modeling",
+  //   items: ["MODEL"]
+  // }
 ];
 
 export default function Navbar() {
