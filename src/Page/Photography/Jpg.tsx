@@ -26,7 +26,7 @@ export default function JPGGallery() {
                         color: "white",
                     }}
                 >
-                    JPG GALLERY
+                    JPG
                 </Typography>
 
                 {/* Galería */}

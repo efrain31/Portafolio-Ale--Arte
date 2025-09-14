@@ -26,7 +26,7 @@ export default function PHOTOSHOOTGallery() {
                         color: "white",
                     }}
                 >
-                    PHOTOSHOOT GALLERY
+                    PHOTOSHOOT
                 </Typography>
 
                 {/* Galería */}

@@ -26,7 +26,7 @@ export default function STILLSGallery() {
                         color: "white",
                     }}
                 >
-                    STILLS (BTS) GALLERY
+                    STILLS (BTS)
                 </Typography>
 
                 {/* Galería */}

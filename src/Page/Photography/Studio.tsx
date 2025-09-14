@@ -26,7 +26,7 @@ export default function STUDIOSGallery() {
                         color: "white",
                     }}
                 >
-                    STUDIO PHOTOSHOOT GALLERY
+                    STUDIO
                 </Typography>
 
                 {/* Galería */}

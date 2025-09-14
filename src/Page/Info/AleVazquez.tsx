@@ -19,13 +19,16 @@ export default function ContactInfo() {
       <Box sx={{ mb: 4 }}>
         <Typography>
           <Link
-            href="mailto:robert@robertclark.com"
+            href="mailto:alejandra@prueba.com?subject=Interés%20en%20tus%20servicios%20de%20diseño%20y%20audiovisuales&body=Hola%20Alejandra,%0D%0A%0D%0AMe%20gustaría%20ponerme%20en%20contacto%20contigo%20para%20conocer%20más%20sobre%20tu%20trabajo%20como%20artista%20gráfica%20de%20audiovisuales.%0D%0A%0D%0AGracias!%0D%0A"
             sx={{ color: "white", textDecoration: "none" }}
           >
             alejandra@prueba.com
           </Link>
+
+
         </Typography>
-        <Typography>+917.957.5340</Typography>
+        <br />
+        <Typography>Mex +52 3310252435</Typography>
       </Box>
 
       {/* Separador opcional */}
@@ -33,15 +36,6 @@ export default function ContactInfo() {
 
       {/* Segundo contacto */}
       <Box>
-        <Typography>or at Ten Ton Studio:</Typography>
-        <Typography>
-          <Link
-            href="mailto:mail@tentonstudio.com"
-            sx={{ color: "white", textDecoration: "none" }}
-          >
-            mail@tentonstudio.com
-          </Link>
-        </Typography>
       </Box>
     </Box>
   );

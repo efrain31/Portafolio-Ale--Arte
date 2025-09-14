@@ -79,20 +79,41 @@ export const artImagesData: ImageData[] = [
 
 // Galería de Food
 export const foodImagesData: ImageData[] = [
-  { src: "/images/8.jpg", title: "Plato 1", description: "Delicioso plato 1" },
-  { src: "/images/4.webp", title: "Plato 2", description: "Delicioso plato 2" },
-  { src: "/images/5.webp", title: "Plato 3", description: "Delicioso plato 3" },
+  { src: "/images/dataale/FOTOGRAFÍAS/FOOD/TACOS.jpg", title: "Plato 1", description: "Delicioso plato 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS/FOOD/TACOSEDITED_1.jpg", title: "Plato 1", description: "Delicioso plato 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS/FOOD/TACOSEDITED_2.jpg", title: "Plato 1", description: "Delicioso plato 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS/FOOD/TACOSEDITED.jpg", title: "Plato 1", description: "Delicioso plato 1" },
+
+
 ];
 
 // Galería de JPG Photos
 export const jpgImagesData: ImageData[] = [
-  { src: "/images/9.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
-  { src: "/images/4.webp", title: "Imagen JPG 2", description: "Descripción JPG 2" },
+  { src: "/images/dataale/FOTOGRAFÍAS/JPG/1.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/2.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/3.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/4.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/5.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/6.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/7.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/8.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/9.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/10.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/11.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/12.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/13.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/14.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/15.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/16.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/17.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS//JPG/18.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
+
+
 ];
 
 // Galería Photoshoot
 export const photoshootImagesData: ImageData[] = [
-  { src: "/images/10.jpg", title: "Photoshoot 1", description: "Descripción Photoshoot 1" },
+  { src: "/images/dataale/FOTOGRAFÍAS", title: "Photoshoot 1", description: "Descripción Photoshoot 1" },
   { src: "/images/5.webp", title: "Photoshoot 2", description: "Descripción Photoshoot 2" },
 ];
 

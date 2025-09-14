@@ -26,7 +26,7 @@ export default function ILUSTRATIONGallery() {
                         color: "white",
                     }}
                 >
-                    ILLUSTRATION GALLERY
+                    ART
                 </Typography>
                 {/* Galería */}
                 <ImageGrid images={IlustrationImagesData} />

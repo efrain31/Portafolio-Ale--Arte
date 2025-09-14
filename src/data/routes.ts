@@ -30,13 +30,13 @@ export const routesMap: Record<string, Record<string, React.ComponentType>> = {
     [normalizeSlug("JPG PHOTOS")]: JPGGallery,
     [normalizeSlug("PHOTOSHOOT")]: PHOTOSHOOTGallery,
     [normalizeSlug("STILLS (BTS)")]:  STILLSGallery,
-    [normalizeSlug("STUDIO PHOTOSHOOT")]: SUTDIOGallery,
+    [normalizeSlug("STUDIO")]: SUTDIOGallery,
     [normalizeSlug("Index")]: ImageGrid,
   },
   work: {
     [normalizeSlug("RESTORATIONS")]: WorksRestauraciones,
     [normalizeSlug("ADS")]: WorksPublicidad,
-    [normalizeSlug("ILLUSTRATION")]: WorksIlustration,
+    [normalizeSlug("ART")]: WorksIlustration,
   },
   info: {
     [normalizeSlug("ABOUT")]: About,

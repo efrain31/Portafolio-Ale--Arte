@@ -6,13 +6,14 @@ const routesData = [
     label: "Fotografía ┃ Photograph",
     basePath: "fotografia",
     mainPath: "/fotografia",
-    items: ["ART GALLERY", "FOOD", "JPG PHOTOS", "PHOTOSHOOT", "STILLS (BTS)", "STUDIO PHOTOSHOOT"]
+    items: ["FOOD", "JPG PHOTOS", "PHOTOSHOOT", "STILLS (BTS)", "STUDIO"]
+    // "ART GALLERY", 
   },
   {
     label: "Trabajos ┃ Work",
     basePath: "work",
     mainPath: "/work",
-    items: ["RESTORATIONS", "ADS", "ILLUSTRATION"]
+    items: ["RESTORATIONS", "ADS", "ART"]
   },
   {
     label: "Sobre mi ┃ About me",

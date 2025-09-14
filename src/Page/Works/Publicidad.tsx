@@ -26,7 +26,7 @@ export default function ADVERTISINGARTGallery() {
                         color: "white",
                     }}
                 >
-                    ADS & ART
+                    ADS
                 </Typography>
                 {/* Galería */}
                 <ImageGrid images={PublicidadImagesData} />

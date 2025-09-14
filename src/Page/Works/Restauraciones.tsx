@@ -26,7 +26,7 @@ export default function RESTORATIONSGallery() {
                         color: "white",
                     }}
                 >
-                    RESTORATIONS GALLERY
+                    RESTORATIONS
                 </Typography>
                 {/* Galería */}
                 <ImageGrid images={RestauracionesImagesData} />

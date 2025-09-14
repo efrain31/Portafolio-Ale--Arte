@@ -26,7 +26,7 @@ export default function FoodGallery() {
                         color: "white",
                     }}
                 >
-                    FOOD GALLERY
+                    FOOD
                 </Typography>
 
                 {/* Galería */}
