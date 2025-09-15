@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 import ImageGrid from "@/components/Galerias/ImagenGrid";
 import { modelImagesData } from "@/Data/data";
 
-export default function STILLSGallery() {
+export default function modelSGallery() {
     return (
         <Box
             sx={{

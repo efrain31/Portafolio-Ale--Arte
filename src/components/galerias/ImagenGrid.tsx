@@ -11,7 +11,7 @@ interface ImageGridProps {
 
 export default function ImageGrid({ images }: ImageGridProps) {
   const [selectedImage, setSelectedImage] = useState<ImageData | null>(null);
-  const [imageOrientation, setImageOrientation] = useState<"portrait" | "landscape">("landscape"); // 🔹 orientación
+  const [imageOrientation, setImageOrientation] = useState<"portrait" | "landscape">("landscape");
   const containerRef = useRef<HTMLDivElement>(null);
   const [columns, setColumns] = useState(3);
 
@@ -28,15 +28,9 @@ export default function ImageGrid({ images }: ImageGridProps) {
     return () => window.removeEventListener("resize", updateColumns);
   }, []);
 
-  // 🔹 función para abrir imagen y detectar orientación
+  // 🔹 Solo selecciona la imagen, la orientación se calcula en el onLoad del modal
   const handleImageClick = (imgData: ImageData) => {
-    const img = new Image();
-    img.src = imgData.src;
-    img.onload = () => {
-      if (img.width > img.height) setImageOrientation("landscape");
-      else setImageOrientation("portrait");
-      setSelectedImage(imgData);
-    };
+    setSelectedImage(imgData);
   };
 
   return (
@@ -65,7 +59,7 @@ export default function ImageGrid({ images }: ImageGridProps) {
                 cursor: "pointer",
                 position: "relative",
               }}
-              onClick={() => handleImageClick(imgData)} // 🔹 usamos handleImageClick
+              onClick={() => handleImageClick(imgData)}
             >
               <motion.img
                 src={imgData.src}
@@ -105,7 +99,6 @@ export default function ImageGrid({ images }: ImageGridProps) {
       </Box>
 
       {/* Modal */}
-      {/* Modal */}
       {selectedImage && (
         <Box
           sx={{
@@ -119,8 +112,8 @@ export default function ImageGrid({ images }: ImageGridProps) {
             alignItems: "center",
             justifyContent: "center",
             zIndex: 9999,
-            overflowY: "auto",
             padding: 2,
+            boxSizing: "border-box",
           }}
           onClick={() => setSelectedImage(null)}
         >
@@ -128,17 +121,26 @@ export default function ImageGrid({ images }: ImageGridProps) {
             onClick={(e) => e.stopPropagation()}
             sx={{
               position: "relative",
-              maxWidth: imageOrientation === "landscape" ? "90%" : "50%", // horizontal: ancho mayor, vertical: ancho menor
-              maxHeight: imageOrientation === "landscape" ? "40%" : "90%", // vertical: menos altura que horizontal
+              width: "800px",   // 🔹 tamaño fijo
+              height: "800px",  // 🔹 tamaño fijo
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <img
               src={selectedImage.src}
               alt={selectedImage.title || "selected"}
+              onLoad={(e) => {
+                const imgEl = e.currentTarget;
+                if (imgEl.naturalWidth > imgEl.naturalHeight)
+                  setImageOrientation("landscape");
+                else setImageOrientation("portrait");
+              }}
               style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "cover",
                 borderRadius: 0,
               }}
             />
@@ -148,7 +150,7 @@ export default function ImageGrid({ images }: ImageGridProps) {
                 position: "absolute",
                 top: 10,
                 right: 10,
-                color: "black",
+                color: "white",
               }}
             >
               <CloseIcon />
@@ -156,7 +158,6 @@ export default function ImageGrid({ images }: ImageGridProps) {
           </Box>
         </Box>
       )}
-
     </>
   );
 }
