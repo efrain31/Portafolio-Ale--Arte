@@ -2,7 +2,7 @@
 
 import { Box, Typography } from "@mui/material";
 import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { photoshootImagesData } from "@/Data/data";
+import { photoshootImagesData } from "@/";
 
 export default function PHOTOSHOOTGallery() {
     return (
