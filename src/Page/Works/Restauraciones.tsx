@@ -2,7 +2,7 @@
 
 import { Box, Typography } from "@mui/material";
 import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { RestauracionesImagesData } from "@/Data/data";
+import { RestauracionesImagesData } from "@/data/data";
 
 export default function RESTORATIONSGallery() {
     return (
