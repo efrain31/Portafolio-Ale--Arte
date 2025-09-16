@@ -1,7 +1,8 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import { indexImagesData } from "@/data/data
+import ImageGrid from "@/components/galerias/ImagenGrid";
+import { indexImagesData } from "@/data/data";
 
 export default function IndexGallery() {
   return (

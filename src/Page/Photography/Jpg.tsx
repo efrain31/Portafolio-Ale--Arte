@@ -1,8 +1,8 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { jpgImagesData } from "@/Data/data";
+import ImageGrid from "@/components/galerias/ImagenGrid";
+import { jpgImagesData } from "@/data/data";
 
 export default function JPGGallery() {
     return (

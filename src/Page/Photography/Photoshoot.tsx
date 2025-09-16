@@ -1,8 +1,8 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { photoshootImagesData } from "@/";
+import ImageGrid from "@/components/galerias/ImagenGrid";
+import { photoshootImagesData } from "@/data/data";
 
 export default function PHOTOSHOOTGallery() {
     return (

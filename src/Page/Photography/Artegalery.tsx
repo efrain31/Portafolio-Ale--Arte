@@ -1,8 +1,8 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { artImagesData } from "@/Data/data";
+import ImageGrid from "@/components/galerias/ImagenGrid";
+import { artImagesData } from "@/data/data";
 import { useState } from "react";
 
 export default function PhotographyGallery() {
@@ -44,7 +44,7 @@ export default function PhotographyGallery() {
         >
           ART GALLERY
         </Typography>
-        <ImageGrid images={artImagesData} onImageOpen={handleImageOpen} />
+        <ImageGrid images={artImagesData} />
       </Box>
     </Box>
   );

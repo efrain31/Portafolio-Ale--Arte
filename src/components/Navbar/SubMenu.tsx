@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { Menu, MenuItem, Typography, Box } from "@mui/material";
 import Link from "next/link";
-import { routesMap } from "@/Data/routes";
+import { routesMap } from "@/data/routes";
 
 interface SubMenuProps {
   label: string;
   items?: string[];
   basePath?: string; // Ej: "fotografia", "work", "info"
   mainPath?: string; // ruta principal opcional
+  onItemClick?: () => void;
 }
 
 export default function SubMenu({
@@ -103,21 +104,34 @@ export default function SubMenu({
             const slug = item.toLowerCase().replace(/\s+/g, "-");
             const path = `/${basePath}/${slug}`; // ruta final
 
+            function onItemClick() {
+              throw new Error("Function not implemented.");
+            }
+
             return (
               <MenuItem
-                key={index}
-                onClick={handleClose}
-                sx={{
-                  color: "white",
-                  fontFamily: "'Inconsolata', monospace",
-                  fontSize: "0.95rem",
-                  "&:hover": { backgroundColor: "#222" },
-                }}
-              >
-                <Link href={path} style={{ textDecoration: "none", color: "inherit" }}>
-                  {item}
-                </Link>
-              </MenuItem>
+  key={index}
+  sx={{
+    color: "white",
+    fontFamily: "'Inconsolata', monospace",
+    fontSize: "0.95rem",
+    "&:hover": { backgroundColor: "#222" },
+  }}
+>
+  <Link
+    href={path}
+    style={{ textDecoration: "none", color: "inherit", width: "100%" }}
+    onClick={() => {
+      handleClose();              // cierra submenú
+      if (onItemClick) onItemClick(); // cierra Drawer en móvil
+    }}
+  >
+    {item}
+  </Link>
+</MenuItem>
+
+
+
             );
           })}
         </Menu>

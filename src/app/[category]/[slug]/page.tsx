@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import { routesMap } from "@/Data/routes";
+import { routesMap } from "@/data/routes";
 
 interface PageProps {
   params: Promise<{

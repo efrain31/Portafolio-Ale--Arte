@@ -1,8 +1,8 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { foodImagesData } from "@/Data/data";
+import ImageGrid from "@/components/galerias/ImagenGrid";
+import { foodImagesData } from "@/data/data";
 
 export default function FoodGallery() {
     return (

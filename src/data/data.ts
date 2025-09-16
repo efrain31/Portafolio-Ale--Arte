@@ -14,25 +14,25 @@ export const indexImagesData: ImageData[] = [
   { src: "/images/dataale/FOTOGRAFIAS/JPG/11.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/12.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/13.jpg", title: "Imagen JPG 1", description: "Descripción JPG 1" },
-    { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/MARUATHA/2.jpg", title: "Imagen 2", description: "Descripción 2" },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/MARUATHA/2.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/MARUATHA/3.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/MARUATHA/4.jpg", title: "Imagen 2", description: "Descripción 2" },
-   { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/CANTADRINK/7.jpg", title: "Imagen 2", description: "Descripción 2" },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/CANTADRINK/7.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/CANTADRINK/2.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/CANTADRINK/1.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/CANTADRINK/6.jpg", title: "Imagen 2", description: "Descripción 2" },
-    { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/PROYECTOCATRINA/4.jpg", title: "Imagen 2", description: "Descripción 2" },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/PROYECTOCATRINA/4.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/PROYECTOCATRINA/1.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/PROYECTOCATRINA/8.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS MODELAJE/PROYECTOCATRINA/11.jpg", title: "Imagen 2", description: "Descripción 2" },
-    { src: "/images/dataale/TRABAJOS/ART/7.JPEG", title: "Imagen 2", description: "Descripción 2" },
+  { src: "/images/dataale/TRABAJOS/ART/7.JPEG", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/TRABAJOS/ART/8.jpeg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/TRABAJOS/ART/9.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/TRABAJOS/ART/10.jpg", title: "Imagen 2", description: "Descripción 2" },
   { src: "/images/dataale/TRABAJOS/ART/11.JPEG", title: "Imagen 2", description: "Descripción 2" },
-   { src: "/images/dataale/FOTOGRAFIAS/FOOD/TACOSEDITED_1.jpg", title: "Plato 1", description: "Delicioso plato 1" },
+  { src: "/images/dataale/FOTOGRAFIAS/FOOD/TACOSEDITED_1.jpg", title: "Plato 1", description: "Delicioso plato 1" },
   { src: "/images/dataale/FOTOGRAFIAS/FOOD/TACOSEDITED_2.jpg", title: "Plato 1", description: "Delicioso plato 1" },
-   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/5.jpg", title: "Photoshoot 1", description: "Descripción Photoshoot 1" },
+  { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/5.jpg", title: "Photoshoot 1", description: "Descripción Photoshoot 1" },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/6.jpg", title: "Photoshoot 1", description: "Descripción Photoshoot 1" },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/7.jpg", title: "Photoshoot 1", description: "Descripción Photoshoot 1" },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/8.jpg", title: "Photoshoot 1", description: "Descripción Photoshoot 1" },
@@ -151,10 +151,13 @@ export const RestauracionesImagesData: ImageData[] = [
 ];
 // Galería de Restauraciones
 export const PublicidadImagesData: ImageData[] = [
-  { src: "/images/dataale/TRABAJOS/PUBLICIDAD/1.jpg", title: "ataque", description: "bschbsajbcnjsanj 1" },
-  { src: "/images/dataale/TRABAJOS/PUBLICIDAD/2.jpg", title: "ataque", description: "bschbsajbcnjsanj 1" },
+  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/55.jpg", title: "Imagen 2", description: "Descripción 2" },
+  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/56.jpg", title: "Imagen 2", description: "Descripción 2" },
+
 
 ];
+
+
 // Galería de Arte
 export const artImagesData: ImageData[] = [
   { src: "/images/7.JPG", title: "Pyaso", description: "bschbsajbcnjsanj 1" },

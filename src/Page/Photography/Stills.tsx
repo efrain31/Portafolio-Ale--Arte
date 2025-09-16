@@ -1,8 +1,8 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { stillsImagesData } from "@/Data/data";
+import ImageGrid from "@/components/galerias/ImagenGrid";
+import { stillsImagesData } from "@/data/data";
 
 export default function STILLSGallery() {
     return (

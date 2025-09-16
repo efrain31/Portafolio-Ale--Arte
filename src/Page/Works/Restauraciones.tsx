@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import ImageGrid from "@/components/Galerias/ImagenGrid";
+import ImageGrid from "@/components/galerias/ImagenGrid";
 import { RestauracionesImagesData } from "@/data/data";
 
 export default function RESTORATIONSGallery() {

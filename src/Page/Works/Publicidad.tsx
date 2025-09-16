@@ -1,10 +1,11 @@
 "use client";
 
 import { Box, Typography } from "@mui/material";
-import ImageGrid from "@/components/Galerias/ImagenGrid";
-import { PublicidadImagesData } from "@/Data/data";
+import ImageGrid from "@/components/galerias/ImagenGrid";
+import { PublicidadImagesData } from "@/data/data";
 
-export default function ADVERTISINGARTGallery() {
+
+export default function AdsGallery() {
     return (
         <Box
             sx={{
@@ -30,6 +31,7 @@ export default function ADVERTISINGARTGallery() {
                 </Typography>
                 {/* Galería */}
                 <ImageGrid images={PublicidadImagesData} />
+
             </Box>
         </Box>
     );
