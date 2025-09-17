@@ -24,7 +24,7 @@ export default function ContactInfo() {
             rel="noopener noreferrer"
             style={{ color: "white", textDecoration: "none" }}
           >
-            alejandra@prueba2.com
+            ale.vr28@hotmail.com
           </a>
         </Typography>
 
