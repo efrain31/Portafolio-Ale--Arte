@@ -27,7 +27,7 @@ export const routesMap: Record<string, Record<string, React.ComponentType>> = {
   fotografia: {
     [normalizeSlug("ART GALLERY")]: PhotographyGallery,
     [normalizeSlug("FOOD")]: FoodGallery,
-    [normalizeSlug("JPG PHOTOS")]: JPGGallery,
+    [normalizeSlug("JPG")]: JPGGallery,
     [normalizeSlug("PHOTOSHOOT")]: PHOTOSHOOTGallery,
     [normalizeSlug("STILLS (BTS)")]:  STILLSGallery,
     [normalizeSlug("STUDIO")]: SUTDIOGallery,

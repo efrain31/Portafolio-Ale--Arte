@@ -33,6 +33,15 @@ export default function ImageGrid({ images }: ImageGridProps) {
     setSelectedImage(imgData);
   };
 
+  // 🔹 Cerrar modal con tecla Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedImage(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <>
       <Box
@@ -114,18 +123,20 @@ export default function ImageGrid({ images }: ImageGridProps) {
             zIndex: 9999,
             padding: 2,
             boxSizing: "border-box",
+            cursor: "pointer", // 🔹 fondo clickeable
           }}
           onClick={() => setSelectedImage(null)}
         >
           <Box
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()} // 🔹 no cerrar al hacer clic en la imagen
             sx={{
               position: "relative",
-              width: "800px",   // 🔹 tamaño fijo
-              height: "800px",  // 🔹 tamaño fijo
+              width: "800px",
+              height: "800px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              cursor: "default", // 🔹 cursor normal sobre la imagen
             }}
           >
             <img

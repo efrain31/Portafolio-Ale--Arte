@@ -35,7 +35,7 @@ export default function ContactInfo() {
           rel="noopener noreferrer"
         >
           <Typography sx={{ color: "white", cursor: "pointer" }}>
-            Mex +52 3310252435
+            +52 3310252435
           </Typography>
         </Link>     
          </Box>

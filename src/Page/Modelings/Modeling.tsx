@@ -26,7 +26,7 @@ export default function modelSGallery() {
                         color: "white",
                     }}
                 >
-                    MODEL GALLERY
+                    MODEL
                 </Typography>
 
                 {/* Galería */}

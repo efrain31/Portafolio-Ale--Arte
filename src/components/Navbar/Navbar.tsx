@@ -12,19 +12,19 @@ import SubMenu from "./SubMenu";
 
 const routesData = [
   {
-    label: "Fotografía ┃ Photograph",
+    label: "FOTOGRAFÍA ┃ PHOTOGRAPH",
     basePath: "fotografia",
     mainPath: "/fotografia",
-    items: ["FOOD", "JPG PHOTOS", "PHOTOSHOOT", "STILLS (BTS)", "STUDIO"],
+    items: ["FOOD", "JPG", "PHOTOSHOOT", "STILLS (BTS)", "STUDIO"],
   },
   {
-    label: "Trabajos ┃ Work",
+    label: "TRABAJOS ┃ WORK",
     basePath: "work",
     mainPath: "/work",
     items: ["RESTORATIONS", "ADS", "ART"],
   },
   {
-    label: "Sobre mi ┃ About me",
+    label: "SOBRE MI ┃ ABOUT ME",
     basePath: "info",
     mainPath: "/about-me",
     items: ["ABOUT", "CONTACT", "MODEL"],
@@ -98,37 +98,37 @@ export default function Navbar() {
 
       {/* Drawer para móvil */}
       <Drawer
-  anchor="right"
-  open={mobileOpen}
-  onClose={() => setMobileOpen(false)} // se cierra SOLO al dar tap afuera
-  ModalProps={{ keepMounted: true }}
-  PaperProps={{
-    sx: { width: 250, backgroundColor: "black", color: "white", p: 2 },
-  }}
->
-  <Box
-    component="nav"
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      gap: 2,
-    }}
-  >
-    {routesData.map((route) => (
-     <SubMenu
-  key={route.label}
-  label={route.label}
-  items={route.items}
-  basePath={route.basePath}
-  mainPath={route.mainPath}
-  onItemClick={() => setMobileOpen(false)} 
-/>
+        anchor="right"
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)} // se cierra SOLO al dar tap afuera
+        ModalProps={{ keepMounted: true }}
+        PaperProps={{
+          sx: { width: 250, backgroundColor: "black", color: "white", p: 2 },
+        }}
+      >
+        <Box
+          component="nav"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          {routesData.map((route) => (
+            <SubMenu
+              key={route.label}
+              label={route.label}
+              items={route.items}
+              basePath={route.basePath}
+              mainPath={route.mainPath}
+              onItemClick={() => setMobileOpen(false)}
+            />
 
 
 
-    ))}
-  </Box>
-</Drawer>
+          ))}
+        </Box>
+      </Drawer>
 
     </AppBar>
   );
