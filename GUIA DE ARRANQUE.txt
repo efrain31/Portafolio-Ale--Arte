@@ -1,0 +1,11 @@
+STAR UP PROJECT
+
+
+INSTALLA EN GLOBAL(SISTEMA OPERATIVO)
+1- composer install
+
+
+DENTRO DEL PROYECTO
+1- git clone (url- repo)
+2- npm install
+3- npm run dev
