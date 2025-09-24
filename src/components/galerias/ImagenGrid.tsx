@@ -73,6 +73,7 @@ export default function ImageGrid({ images }: ImageGridProps) {
               <motion.img
                 src={imgData.src}
                 alt={imgData.title || `img-${index}`}
+                  loading="lazy"
                 style={{
                   width: "100%",
                   display: "block",
