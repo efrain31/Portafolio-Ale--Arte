@@ -9,3 +9,8 @@ DENTRO DEL PROYECTO
 1- git clone (url- repo)
 2- npm install
 3- npm run dev
+
+
+
+ACTUALIZACION DE IMAGENES
+ npx tsx scripts/update-data-working.ts
