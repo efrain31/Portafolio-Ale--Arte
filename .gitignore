@@ -39,3 +39,23 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+
+# ============ AÑADE ESTAS LÍNEAS ============
+# Archivos de Blob (locales y temporales)
+blob-*.json
+blob-urls.json
+blob-local-mapping.json
+blob-mapping-*.json
+
+# Backups de datos generados localmente
+data/data-backup-*.ts
+data/data-local-backup-*.ts
+
+# Scripts temporales (si creas alguno)
+scripts/temp-*
+scripts/*.temp.*
+
+# Cache de imágenes (opcional)
+.cache/
