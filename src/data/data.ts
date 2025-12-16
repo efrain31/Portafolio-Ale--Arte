@@ -36,7 +36,7 @@ export const indexImagesData: ImageData[] = [
   { src: "/images/dataale/FOTOGRAFIAS/FOOD/TACOSEDITED_2.jpg", },
   //{ src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/6.jpg", },
- // { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/", },
+  // { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/8.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/9.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/10.jpg", },
@@ -83,9 +83,8 @@ export const modelImagesData: ImageData[] = [
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/9.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/10.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/11.jpg", },
-  { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/12.jpg", },
-  { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/13.jpg", },
-  { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/14.jpg", },
+ // { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/13.jpg", },
+ // { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/14.jpg", },
 
 ];
 // Galería de Ilustraciones
@@ -159,6 +158,7 @@ export const foodImagesData: ImageData[] = [
 
 // Galería de JPG Photos
 export const jpgImagesData: ImageData[] = [
+  { src: "/images/dataale/FOTOGRAFIAS/JPG/j21.jpeg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/1.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/2.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/3.jpg", },
@@ -170,6 +170,7 @@ export const jpgImagesData: ImageData[] = [
   { src: "/images/dataale/FOTOGRAFIAS/JPG/8.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/9.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/10.jpg", },
+  { src: "/images/dataale/FOTOGRAFIAS/JPG/j24.jpeg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/11.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/12.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/13.jpg", },
@@ -178,13 +179,10 @@ export const jpgImagesData: ImageData[] = [
   { src: "/images/dataale/FOTOGRAFIAS/JPG/16.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/17.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/18.jpg", },
-
   { src: "/images/dataale/FOTOGRAFIAS/JPG/j19.jpeg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/j20.jpeg", },
-  { src: "/images/dataale/FOTOGRAFIAS/JPG/j21.jpeg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/j22.jpeg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/j23.jpeg", },
-  { src: "/images/dataale/FOTOGRAFIAS/JPG/j24.jpeg", },
 
 
 
@@ -198,9 +196,9 @@ export const photoshootImagesData: ImageData[] = [
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/2.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/3.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/4.jpg", },
-  { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/5.jpg", },
+  //{ src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/5.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/6.jpg", },
-  { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/7.jpg", },
+  //{ src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/7.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/8.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/9.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/10.jpg", },
