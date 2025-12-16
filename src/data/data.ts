@@ -129,8 +129,6 @@ export const RestauracionesImagesData: ImageData[] = [
   { src: "https://6cpapojiq0eoskkp.public.blob.vercel-storage.com/images/dataale/TRABAJOS/RESTAURACIONES/r14.png", },
   { src: "https://6cpapojiq0eoskkp.public.blob.vercel-storage.com/images/dataale/TRABAJOS/RESTAURACIONES/r15.png", },
   { src: "https://6cpapojiq0eoskkp.public.blob.vercel-storage.com/images/dataale/TRABAJOS/RESTAURACIONES/r16.png", },
-
-
 ];
 
 // Galería de ADS
