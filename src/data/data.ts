@@ -134,6 +134,9 @@ export const RestauracionesImagesData: ImageData[] = [
 export const PublicidadImagesData: ImageData[] = [
   { src: "/images/dataale/TRABAJOS/PUBLICIDAD/1.jpg", },
   { src: "/images/dataale/TRABAJOS/PUBLICIDAD/2.jpg", },
+  
+  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/55.jpg", },
+  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/56.jpg", },
 ];
 
 
