@@ -117,7 +117,7 @@ export const RestauracionesImagesData: ImageData[] = [
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r3.jpeg", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r4.jpeg", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r5.jpeg", },
-  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r6.jpeg", },
+  //{ src: "/images/dataale/TRABAJOS/RESTAURACIONES/r6.jpeg", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r7.png", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r8.png", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r9.png", },
@@ -132,8 +132,8 @@ export const RestauracionesImagesData: ImageData[] = [
 
 // Galería de ADS
 export const PublicidadImagesData: ImageData[] = [
-  { src: "/images/dataale/TRABAJOS/PUBLICIDAD/1.jpg", },
-  { src: "/images/dataale/TRABAJOS/PUBLICIDAD/2.jpg", },
+ // { src: "/images/dataale/TRABAJOS/PUBLICIDAD/1.jpg", },
+  //{ src: "/images/dataale/TRABAJOS/PUBLICIDAD/2.jpg", },
   
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/55.jpg", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/56.jpg", },
