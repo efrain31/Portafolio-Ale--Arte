@@ -77,7 +77,7 @@ export const modelImagesData: ImageData[] = [
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/3.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/4.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/5.jpg", },
-  { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/6.jpg", },
+  //{ src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/6.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/7.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/8.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/9.jpg", },
