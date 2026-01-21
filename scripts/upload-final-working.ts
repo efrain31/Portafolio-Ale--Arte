@@ -1,4 +1,4 @@
-// scripts/upload-final-working.ts - VERSIÓN CORREGIDA
+// scripts/upload-final-working.ts - VERSIÓN COMPLETAMENTE CORREGIDA
 import { put } from '@vercel/blob';
 import fs from 'fs';
 import path from 'path';
@@ -33,10 +33,9 @@ async function main() {
     console.log('🧪 Probando token...');
     
     try {
-        // PRUEBA CORREGIDA - Usa string en lugar de Buffer
+        // PRUEBA CORREGIDA - Sin 'access', solo 'token'
         const test = await put('test-connection.txt', 'test', {
-            access: 'public',
-            token: TOKEN
+            token: TOKEN  // ← SOLO 'token', NO 'access'
         });
         console.log(`✅ Token válido! ${test.url}\n`);
     } catch (error: any) {
@@ -81,10 +80,9 @@ async function main() {
                 console.log(`   [${count}] ${image}`);
                 
                 const fileContent = fs.readFileSync(imagePath);
-                // CORRECCIÓN: Usa .buffer para convertir a ArrayBuffer
+                // CORRECCIÓN: Sin 'access', solo 'token'
                 const { url } = await put(blobPath, fileContent.buffer, {
-                    access: 'public',
-                    token: TOKEN
+                    token: TOKEN  // ← SOLO 'token', NO 'access'
                 });
                 
                 results.push({
