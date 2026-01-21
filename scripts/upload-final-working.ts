@@ -1,4 +1,4 @@
-// scripts/upload-final-working.ts
+// scripts/upload-final-working.ts - VERSIÓN CORREGIDA
 import { put } from '@vercel/blob';
 import fs from 'fs';
 import path from 'path';
@@ -33,8 +33,8 @@ async function main() {
     console.log('🧪 Probando token...');
     
     try {
-        // Prueba simple
-        const test = await put('test-connection.txt', Buffer.from('test'), {
+        // PRUEBA CORREGIDA - Usa string en lugar de Buffer
+        const test = await put('test-connection.txt', 'test', {
             access: 'public',
             token: TOKEN
         });
@@ -81,7 +81,8 @@ async function main() {
                 console.log(`   [${count}] ${image}`);
                 
                 const fileContent = fs.readFileSync(imagePath);
-                const { url } = await put(blobPath, fileContent, {
+                // CORRECCIÓN: Usa .buffer para convertir a ArrayBuffer
+                const { url } = await put(blobPath, fileContent.buffer, {
                     access: 'public',
                     token: TOKEN
                 });
