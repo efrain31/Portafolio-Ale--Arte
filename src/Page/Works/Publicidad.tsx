@@ -12,7 +12,7 @@ export default function AdsGallery() {
                 display: "flex",
                 flexDirection: "column",
                 minHeight: "100vh",
-                backgroundColor: "black", // fondo como el submenu
+                backgroundColor: "black", 
                 color: "white",
             }}
         >
