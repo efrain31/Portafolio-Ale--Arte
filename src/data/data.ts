@@ -8,8 +8,6 @@ export interface ImageData {
 
 // Galería de index
 export const indexImagesData: ImageData[] = [
-  // { src: "/images/dataale/FOTOGRAFIAS/JPG/8.jpg", },
-
   { src: "/images/dataale/FOTOGRAFIAS/JPG/8.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/9.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/JPG/10.jpg", },
@@ -34,9 +32,7 @@ export const indexImagesData: ImageData[] = [
   { src: "/images/dataale/TRABAJOS/ART/11.JPEG", },
   { src: "/images/dataale/FOTOGRAFIAS/FOOD/TACOSEDITED_1.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/FOOD/TACOSEDITED_2.jpg", },
-  //{ src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/6.jpg", },
-  // { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/8.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/9.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/10.jpg", },
@@ -77,15 +73,11 @@ export const modelImagesData: ImageData[] = [
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/3.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/4.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/5.jpg", },
-  //{ src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/6.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/7.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/8.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/9.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/10.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/11.jpg", },
- // { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/13.jpg", },
- // { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/14.jpg", },
-
 ];
 // Galería de Ilustraciones
 export const IlustrationImagesData: ImageData[] = [
@@ -117,7 +109,6 @@ export const RestauracionesImagesData: ImageData[] = [
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r3.jpeg", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r4.jpeg", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r5.jpeg", },
-  //{ src: "/images/dataale/TRABAJOS/RESTAURACIONES/r6.jpeg", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r7.png", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r8.png", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r9.png", },
@@ -132,9 +123,6 @@ export const RestauracionesImagesData: ImageData[] = [
 
 // Galería de ADS
 export const PublicidadImagesData: ImageData[] = [
- // { src: "/images/dataale/TRABAJOS/PUBLICIDAD/1.jpg", },
-  //{ src: "/images/dataale/TRABAJOS/PUBLICIDAD/2.jpg", },
-  
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/55.jpg", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/56.jpg", },
 ];
@@ -199,9 +187,7 @@ export const photoshootImagesData: ImageData[] = [
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/2.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/3.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/4.jpg", },
-  //{ src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/5.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/6.jpg", },
-  //{ src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/7.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/8.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/9.jpg", },
   { src: "/images/dataale/FOTOGRAFIAS/PHOTOSHOOT/10.jpg", },

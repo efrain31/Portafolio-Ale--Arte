@@ -1,39 +1,31 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import { Box, IconButton } from "@mui/material";
+
+import { useState, useEffect, useCallback } from "react";
+import { Box, IconButton, useMediaQuery } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { ImageData } from "@/data/data";
 
 interface ImageGridProps {
   images: ImageData[];
 }
 
+const PRIORITY_COUNT = 6;
+
 export default function ImageGrid({ images }: ImageGridProps) {
   const [selectedImage, setSelectedImage] = useState<ImageData | null>(null);
-  const [imageOrientation, setImageOrientation] = useState<"portrait" | "landscape">("landscape");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [columns, setColumns] = useState(3);
+  const [loadedSrcs, setLoadedSrcs] = useState<Set<string>>(new Set());
+  const [modalLoaded, setModalLoaded] = useState(false);
 
-  const updateColumns = () => {
-    const width = window.innerWidth;
-    if (width < 600) setColumns(1);
-    else if (width < 900) setColumns(2);
-    else setColumns(3);
-  };
+  const isMobile = useMediaQuery("(max-width:599px)");
+  const isTablet = useMediaQuery("(min-width:600px) and (max-width:899px)");
+  const columns = isMobile ? 1 : isTablet ? 2 : 3;
 
-  useEffect(() => {
-    updateColumns();
-    window.addEventListener("resize", updateColumns);
-    return () => window.removeEventListener("resize", updateColumns);
+  const markLoaded = useCallback((src: string) => {
+    setLoadedSrcs((prev) => new Set(prev).add(src));
   }, []);
 
-  // 🔹 Solo selecciona la imagen, la orientación se calcula en el onLoad del modal
-  const handleImageClick = (imgData: ImageData) => {
-    setSelectedImage(imgData);
-  };
-
-  // 🔹 Cerrar modal con tecla Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedImage(null);
@@ -42,10 +34,14 @@ export default function ImageGrid({ images }: ImageGridProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Resetear estado de carga del modal al cambiar imagen
+  useEffect(() => {
+    setModalLoaded(false);
+  }, [selectedImage?.src]);
+
   return (
     <>
       <Box
-        ref={containerRef}
         sx={{
           columnCount: columns,
           columnGap: "16px",
@@ -55,60 +51,81 @@ export default function ImageGrid({ images }: ImageGridProps) {
         }}
       >
         <AnimatePresence>
-          {images.map((imgData, index) => (
-            <motion.div
-              key={imgData.src}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
-              style={{
-                breakInside: "avoid",
-                marginBottom: "16px",
-                cursor: "pointer",
-                position: "relative",
-              }}
-              onClick={() => handleImageClick(imgData)}
-            >
-              <motion.img
-                src={imgData.src}
-                alt={imgData.title || `img-${index}`}
-                  loading="lazy"
+          {images.map((imgData, index) => {
+            const isLoaded = loadedSrcs.has(imgData.src);
+            const isPriority = index < PRIORITY_COUNT;
+
+            return (
+              <motion.div
+                key={imgData.src}
+                initial={{ y: 24, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.5) }}
                 style={{
-                  width: "100%",
-                  display: "block",
-                  objectFit: "cover",
-                  borderRadius: 0,
+                  breakInside: "avoid",
+                  marginBottom: "16px",
+                  cursor: "pointer",
+                  position: "relative",
+                  overflow: "hidden",
+                  minHeight: "80px",
+                  backgroundColor: "#111",
                 }}
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              />
-              {imgData.title && (
-                <Box
-                  className="thumb-title"
-                  sx={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    width: "100%",
-                    color: "white",
-                    background: "rgba(0,0,0,0.4)",
-                    textAlign: "center",
-                    opacity: 0,
-                    transition: "0.3s",
-                    padding: "5px 0",
-                    "&:hover": { opacity: 1 },
-                  }}
-                >
-                  {imgData.title}
-                </Box>
-              )}
-            </motion.div>
-          ))}
+                whileHover={{ scale: 1.03 }}
+                onClick={() => setSelectedImage(imgData)}
+              >
+                {/* Shimmer mientras carga */}
+                {!isLoaded && (
+                  <div
+                    className="img-shimmer"
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      zIndex: 1,
+                    }}
+                  />
+                )}
+
+                <Image
+                  src={imgData.src}
+                  alt={imgData.title || `imagen-${index + 1}`}
+                  width={0}
+                  height={0}
+                  sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+                  className={`img-fade${isLoaded ? " loaded" : ""}`}
+                  style={{ width: "100%", height: "auto", display: "block", position: "relative", zIndex: 2 }}
+                  priority={isPriority}
+                  loading={isPriority ? undefined : "lazy"}
+                  onLoad={() => markLoaded(imgData.src)}
+                />
+
+                {imgData.title && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      bottom: 0,
+                      left: 0,
+                      width: "100%",
+                      color: "white",
+                      background: "rgba(0,0,0,0.4)",
+                      textAlign: "center",
+                      opacity: 0,
+                      transition: "0.3s",
+                      padding: "5px 0",
+                      zIndex: 3,
+                      "&:hover": { opacity: 1 },
+                    }}
+                  >
+                    {imgData.title}
+                  </Box>
+                )}
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
       </Box>
 
-      {/* Modal */}
+      {/* Lightbox */}
       {selectedImage && (
         <Box
           sx={{
@@ -117,51 +134,64 @@ export default function ImageGrid({ images }: ImageGridProps) {
             left: 0,
             width: "100vw",
             height: "100vh",
-            background: "rgba(0,0,0,0.85)",
+            background: "rgba(0,0,0,0.92)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             zIndex: 9999,
             padding: 2,
             boxSizing: "border-box",
-            cursor: "pointer", // 🔹 fondo clickeable
+            cursor: "pointer",
           }}
           onClick={() => setSelectedImage(null)}
         >
           <Box
-            onClick={(e) => e.stopPropagation()} // 🔹 no cerrar al hacer clic en la imagen
+            onClick={(e) => e.stopPropagation()}
             sx={{
               position: "relative",
-              width: "800px",
-              height: "800px",
+              maxWidth: "90vw",
+              maxHeight: "90vh",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              cursor: "default", // 🔹 cursor normal sobre la imagen
+              cursor: "default",
+              backgroundColor: "#111",
+              minWidth: 60,
+              minHeight: 60,
             }}
           >
-            <img
+            {!modalLoaded && (
+              <div
+                className="img-shimmer"
+                style={{ position: "absolute", inset: 0, minWidth: 200, minHeight: 200 }}
+              />
+            )}
+
+            <Image
               src={selectedImage.src}
-              alt={selectedImage.title || "selected"}
-              onLoad={(e) => {
-                const imgEl = e.currentTarget;
-                if (imgEl.naturalWidth > imgEl.naturalHeight)
-                  setImageOrientation("landscape");
-                else setImageOrientation("portrait");
-              }}
+              alt={selectedImage.title || "imagen seleccionada"}
+              width={0}
+              height={0}
+              sizes="100vw"
+              className={`img-fade${modalLoaded ? " loaded" : ""}`}
               style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                objectFit: "cover",
-                borderRadius: 0,
+                maxWidth: "90vw",
+                maxHeight: "90vh",
+                width: "auto",
+                height: "auto",
+                objectFit: "contain",
+                display: "block",
               }}
+              priority
+              onLoad={() => setModalLoaded(true)}
             />
+
             <IconButton
               onClick={() => setSelectedImage(null)}
               sx={{
                 position: "absolute",
-                top: 10,
-                right: 10,
+                top: -40,
+                right: -8,
                 color: "white",
               }}
             >
