@@ -7,17 +7,13 @@ import {
   Box,
   IconButton,
   Drawer,
-  Tooltip,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useState, useEffect } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import { useState } from "react";
 import SubMenu from "./SubMenu";
 
-const FONT_MIN = 0.8;
-const FONT_MAX = 2.0;
-const FONT_STEP = 0.15;
-const FONT_DEFAULT = 1.3;
-const STORAGE_KEY = "nav-font-size";
+const FONT_SIZE = 2;
 
 const routesData = [
   {
@@ -39,89 +35,6 @@ const routesData = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(FONT_DEFAULT);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) setFontSize(parseFloat(saved));
-  }, []);
-
-  const adjust = (delta: number) => {
-    setFontSize((prev) => {
-      const next = Math.min(FONT_MAX, Math.max(FONT_MIN, parseFloat((prev + delta).toFixed(2))));
-      localStorage.setItem(STORAGE_KEY, String(next));
-      return next;
-    });
-  };
-
-  const tooltipSx = {
-    tooltip: {
-      sx: {
-        backgroundColor: "#111",
-        color: "white",
-        fontFamily: "'Inconsolata', monospace",
-        fontSize: "0.75rem",
-        letterSpacing: "0.05em",
-        border: "1px solid #333",
-        borderRadius: 0,
-      },
-    },
-  };
-
-  const sizeControls = (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-      <Tooltip
-        title="Reducir tamaño del menú"
-        placement="bottom"
-        componentsProps={tooltipSx}
-      >
-        <span>
-          <button
-            onClick={() => adjust(-FONT_STEP)}
-            disabled={fontSize <= FONT_MIN}
-            style={{
-              background: "none",
-              border: "none",
-              color: fontSize <= FONT_MIN ? "#444" : "white",
-              fontFamily: "'Inconsolata', monospace",
-              fontSize: "0.85rem",
-              cursor: fontSize <= FONT_MIN ? "default" : "pointer",
-              padding: "2px 6px",
-              letterSpacing: "0.05em",
-              lineHeight: 1,
-            }}
-          >
-            A−
-          </button>
-        </span>
-      </Tooltip>
-      <Tooltip
-        title="Aumentar tamaño del menú"
-        placement="bottom"
-        componentsProps={tooltipSx}
-      >
-        <span>
-          <button
-            onClick={() => adjust(FONT_STEP)}
-            disabled={fontSize >= FONT_MAX}
-            style={{
-              background: "none",
-              border: "none",
-              color: fontSize >= FONT_MAX ? "#444" : "white",
-              fontFamily: "'Inconsolata', monospace",
-              fontSize: "1.1rem",
-              cursor: fontSize >= FONT_MAX ? "default" : "pointer",
-              padding: "2px 6px",
-              letterSpacing: "0.05em",
-              lineHeight: 1,
-            }}
-          >
-            A+
-          </button>
-        </span>
-      </Tooltip>
-    </Box>
-  );
 
   return (
     <AppBar
@@ -180,10 +93,9 @@ export default function Navbar() {
               label={route.label}
               items={route.items}
               basePath={route.basePath}
-              fontSize={fontSize}
+              fontSize={FONT_SIZE}
             />
           ))}
-          {sizeControls}
         </Box>
 
         {/* Botón hamburguesa móvil */}
@@ -199,28 +111,65 @@ export default function Navbar() {
 
       {/* Drawer móvil */}
       <Drawer
-        anchor="right"
+        anchor="left"
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
         ModalProps={{ keepMounted: true }}
-        PaperProps={{
-          sx: { width: 260, backgroundColor: "black", color: "white", p: 2 },
+        slotProps={{
+          paper: {
+            sx: {
+              width: 300,
+              backgroundColor: "#0a0a0a",
+              color: "white",
+              borderRight: "1px solid #1a1a1a",
+            },
+          },
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        {/* Encabezado del drawer */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            px: 2,
+            py: 2,
+            borderBottom: "1px solid #1a1a1a",
+          }}
+        >
+          <Typography
+            sx={{
+              fontFamily: "'Inconsolata', monospace",
+              fontSize: "0.9rem",
+              color: "white",
+              letterSpacing: "0.2em",
+            }}
+          >
+            <a href="/" style={{ color: "inherit", textDecoration: "none" }}>
+              Ale Vazquez
+            </a>
+          </Typography>
+          <IconButton
+            onClick={() => setMobileOpen(false)}
+            sx={{ color: "#666", p: 0.5, "&:hover": { color: "white" } }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Box>
+
+        {/* Items del menú */}
+        <Box sx={{ display: "flex", flexDirection: "column", pt: 1 }}>
           {routesData.map((route) => (
             <SubMenu
               key={route.label}
               label={route.label}
               items={route.items}
               basePath={route.basePath}
-              fontSize={fontSize}
+              fontSize={FONT_SIZE}
               onItemClick={() => setMobileOpen(false)}
+              mobile
             />
           ))}
-          <Box sx={{ pt: 1, borderTop: "1px solid #222" }}>
-            {sizeControls}
-          </Box>
         </Box>
       </Drawer>
     </AppBar>

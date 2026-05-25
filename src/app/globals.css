@@ -42,4 +42,6 @@ body {
   background-color: black;
   color: white;
   font-family: 'Inconsolata', monospace;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
 }

@@ -64,6 +64,7 @@ export default function HeroPage() {
             fontSize: "clamp(3.5rem, 11vw, 10rem)",
             fontWeight: "normal",
             letterSpacing: "-0.01em",
+            textTransform: "none",
           }}
         >
           <em

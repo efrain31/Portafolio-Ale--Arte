@@ -29,6 +29,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           backgroundColor: "black",
           color: "white",
           fontFamily: "'Inconsolata', monospace",
+          letterSpacing: "0.45em",
+          textTransform: "uppercase",
         }}
       >
         <Navbar />
