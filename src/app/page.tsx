@@ -100,8 +100,8 @@ export default function HeroPage() {
             color: "white",
             textTransform: "uppercase",
           }}
-        >
-          Artista Visual
+        ><br /><br />
+          Artista Visual | Diseñadora Gráfica | Audiovisual
         </motion.p>
 
         {/* CTA */}

@@ -1,23 +1,16 @@
-import type { Metadata } from "next";
-import { ReactNode } from "react";
+"use client";
+
+import type { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Ale Vazquez | Artista Visual",
-  description:
-    "Portafolio de Ale Vazquez — fotografía, ilustración, restauraciones y más.",
-  openGraph: {
-    title: "Ale Vazquez | Artista Visual",
-    description:
-      "Portafolio de Ale Vazquez — fotografía, ilustración, restauraciones y más.",
-    type: "website",
-  },
-};
-
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const hideNavbar = pathname === "/";
+
   return (
     <html lang="es">
       <body
@@ -33,7 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           textTransform: "uppercase",
         }}
       >
-        <Navbar />
+        {!hideNavbar && <Navbar />}
         <main className="main-content" style={{ flex: 1 }}>{children}</main>
         <Footer />
         <ScrollToTopButton />
