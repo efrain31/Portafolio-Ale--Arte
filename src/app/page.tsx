@@ -8,16 +8,16 @@ export default function HeroPage() {
   return (
     <div
       className="hero-full"
+      suppressHydrationWarning
       style={{
         position: "relative",
         width: "100%",
-        height: "calc(100vh - 88px)",
-        minHeight: 480,
+        minHeight: "calc(100vh - 200px)",
         overflow: "hidden",
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "center",
-        paddingBottom: "6vh",
+        paddingBottom: "2rem",
       }}
     >
       {/* Imagen de fondo */}
@@ -57,6 +57,7 @@ export default function HeroPage() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          suppressHydrationWarning
           style={{
             margin: 0,
             lineHeight: 0.95,
@@ -92,6 +93,7 @@ export default function HeroPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 0.75, y: 0 }}
           transition={{ duration: 1, delay: 0.35, ease: "easeOut" }}
+          suppressHydrationWarning
           style={{
             margin: 0,
             fontFamily: "'Inconsolata', monospace",
@@ -101,7 +103,7 @@ export default function HeroPage() {
             textTransform: "uppercase",
           }}
         ><br /><br />
-          Artista Visual | Diseñadora Gráfica | Audiovisual
+          Artista Visual | Diseñadora Gráfica | 
         </motion.p>
 
         {/* CTA */}
@@ -109,6 +111,7 @@ export default function HeroPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
+          suppressHydrationWarning
           style={{ marginTop: "1.8rem" }}
         >
           <Link
