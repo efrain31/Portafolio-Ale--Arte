@@ -119,6 +119,8 @@ export const RestauracionesImagesData: ImageData[] = [
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r14.png", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r15.png", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r16.png", },
+  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r17.jpg", },
+  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r18.jpeg", },
 ];
 
 // Galería de ADS
