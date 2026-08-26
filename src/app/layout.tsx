@@ -1,16 +1,17 @@
-"use client";
-
 import type { ReactNode } from "react";
-import { usePathname } from "next/navigation";
-import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
-import ScrollToTopButton from "@/components/ScrollToTopButton";
+import type { Metadata } from "next";
+import LayoutClient from "./layout-client";
 import "./globals.css";
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
-  const hideNavbar = pathname === "/";
+export const metadata: Metadata = {
+  title: "Ale Vazquez - Artista",
+  description: "Portafolio de Ale Vazquez",
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
 
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
       <body
@@ -26,10 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           textTransform: "uppercase",
         }}
       >
-        {!hideNavbar && <Navbar />}
-        <main className="main-content" style={{ flex: 1 }}>{children}</main>
-        <Footer />
-        <ScrollToTopButton />
+        <LayoutClient>{children}</LayoutClient>
       </body>
     </html>
   );
