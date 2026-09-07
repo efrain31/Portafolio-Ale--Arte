@@ -69,7 +69,7 @@ export default function ImageGrid({ images }: ImageGridProps) {
                   position: "relative",
                   overflow: "hidden",
                   minHeight: "80px",
-                  backgroundColor: "#111",
+                  backgroundColor: "#000000",
                 }}
                 whileHover={{ scale: 1.03 }}
                 onClick={() => setSelectedImage(imgData)}
@@ -155,7 +155,7 @@ export default function ImageGrid({ images }: ImageGridProps) {
               alignItems: "center",
               justifyContent: "center",
               cursor: "default",
-              backgroundColor: "#111",
+              backgroundColor: "#000000",
               minWidth: 60,
               minHeight: 60,
             }}

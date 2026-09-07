@@ -4,17 +4,9 @@
   box-sizing: border-box;
 }
 
-/* Navbar fija en desktop — empuja el contenido hacia abajo */
-@media (min-width: 900px) {
-  .main-content {
-    padding-top: 112px;
-  }
-  /* Hero: se extiende detrás del navbar */
-  .hero-full {
-    height: 100vh !important;
-    margin-top: -112px;
-    min-height: 100vh !important;
-  }
+/* Header global fijo — no necesita padding especial porque es transparente */
+.main-content {
+  padding-top: 0;
 }
 
 @keyframes shimmer {
@@ -39,7 +31,7 @@
 
 body {
   margin: 0;
-  background-color: black;
+  background-color: #000000;
   color: white;
   font-family: 'Inconsolata', monospace;
   letter-spacing: 0.45em;
