@@ -6,6 +6,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import NavLinks from "./NavLinks";
+import MobileNav from "./MobileNav";
 
 export default function GlobalHeader() {
   const pathname = usePathname();
@@ -111,9 +112,14 @@ export default function GlobalHeader() {
         </Box>
 
         {!isHome && (
-          <Link href="/portafolio" onClick={handleHomeClick} style={{ textDecoration: "none" }}>
+          <Link
+            href="/portafolio"
+            onClick={handleHomeClick}
+            style={{ textDecoration: "none", display: "flex" }}
+          >
             <IconButton
               sx={{
+                display: { xs: "none", md: "inline-flex" },
                 color: "white",
                 transition: "all 0.3s",
                 "&:hover": {
@@ -125,6 +131,10 @@ export default function GlobalHeader() {
             </IconButton>
           </Link>
         )}
+
+        {/* En mobile, el ícono de casa se reemplaza por la hamburguesa
+            (gira a cruz al abrir) con el mismo nav que NavLinks. */}
+        {!isHome && <MobileNav />}
       </Box>
     </Box>
   );
