@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
+import BackLink from "@/components/common/BackLink";
 
 export default function AboutMeHero() {
   const [showText, setShowText] = useState(false);
@@ -22,8 +23,14 @@ export default function AboutMeHero() {
         alignItems: "center",
         justifyContent: "center",
         p: 3,
+        paddingTop: { xs: "6.5rem", md: "7rem" },
       }}
     >
+      {/* Enlace de regreso, alineado con el ancho del contenido */}
+      <Box sx={{ width: "100%", maxWidth: 1000 }}>
+        <BackLink href="/portafolio" label="Volver al portafolio" />
+      </Box>
+
       {/* Contenedor principal */}
       <Box
         sx={{

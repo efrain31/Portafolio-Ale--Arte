@@ -1,4 +1,5 @@
 import { Box, Typography, Link } from "@mui/material";
+import BackLink from "@/components/common/BackLink";
 
 export default function ContactInfo() {
   return (
@@ -8,8 +9,13 @@ export default function ContactInfo() {
         color: "white",
         backgroundColor: "black",
         p: 5,
+        paddingTop: { xs: "6.5rem", md: "7rem" },
       }}
     >
+      <Box sx={{ textAlign: "left" }}>
+        <BackLink href="/portafolio" label="Volver al portafolio" />
+      </Box>
+
       {/* Título */}
       <Typography variant="h4" sx={{ mb: 3 }}>
         CONTACT
