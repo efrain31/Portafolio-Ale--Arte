@@ -103,7 +103,7 @@ export default function HeroPage() {
             textTransform: "uppercase",
           }}
         ><br /><br />
-          Artista Visual | Diseñadora Gráfica | 
+          Artista Visual | Diseñadora Gráfica | Modelo
         </motion.p>
 
         {/* CTA */}
@@ -115,7 +115,7 @@ export default function HeroPage() {
           style={{ marginTop: "1.8rem" }}
         >
           <Link
-            href="/portafolio"
+            href="/galeria"
             style={{
               fontFamily: "'Inconsolata', monospace",
               fontSize: "0.75rem",

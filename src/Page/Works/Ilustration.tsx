@@ -2,6 +2,7 @@
 
 import { Box, Typography } from "@mui/material";
 import ImageGrid from "@/components/galerias/ImagenGrid";
+import BackLink from "@/components/common/BackLink";
 import { IlustrationImagesData } from "@/data/data";
 
 export default function ILUSTRATIONGallery() {
@@ -15,7 +16,8 @@ export default function ILUSTRATIONGallery() {
                 color: "white",
             }}
         >
-            <Box sx={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: 2 }}>
+            <Box sx={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: 2, paddingTop: { xs: "6.5rem", md: "7rem" } }}>
+                <BackLink href="/portafolio" label="Volver al portafolio" />
                 {/* Título de la galería */}
                 <Typography
                     sx={{

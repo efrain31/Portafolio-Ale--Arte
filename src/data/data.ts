@@ -79,6 +79,25 @@ export const modelImagesData: ImageData[] = [
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/10.jpg", },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/11.jpg", },
 ];
+// Galería Studio 7
+export const studio7ImagesData: ImageData[] = [
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/STUDIO7/STUDIO1.jpg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/STUDIO7/STUDIO2.JPG", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/STUDIO7/STUDIO3.JPG", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/STUDIO7/STUDIO4.JPG", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/STUDIO7/STUDIO5.jpg", },
+];
+
+// Galería Sol & Luna
+export const solLunaImagesData: ImageData[] = [
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-1.jpg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-2.jpg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-3.jpg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-4.jpg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-15.jpg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-16.jpg", },
+];
+
 // Galería de Ilustraciones
 export const IlustrationImagesData: ImageData[] = [
   { src: "/images/dataale/TRABAJOS/ART/1.JPG", },
@@ -121,6 +140,9 @@ export const RestauracionesImagesData: ImageData[] = [
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r16.png", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r17.jpg", },
   { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r18.jpeg", },
+  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r19.jpeg", },
+  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r20.jpeg", },
+  { src: "/images/dataale/TRABAJOS/RESTAURACIONES/r21.jpeg", },
 ];
 
 // Galería de ADS

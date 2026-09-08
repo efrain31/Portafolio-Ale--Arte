@@ -12,13 +12,21 @@ interface SubCategoryGridProps {
     name: string;
     images: ImageData[];
   }>;
+  onBack: () => void;
+  initialSubCategoryName?: string | null;
 }
 
 export default function SubCategoryGrid({
   category,
   subCategories,
+  onBack,
+  initialSubCategoryName,
 }: SubCategoryGridProps) {
-  const [selectedSubCategory, setSelectedSubCategory] = useState<number | null>(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<number | null>(() => {
+    if (!initialSubCategoryName) return null;
+    const index = subCategories.findIndex((s) => s.name === initialSubCategoryName);
+    return index >= 0 ? index : null;
+  });
 
   const categoryLabel = {
     modelaje: "Modelaje",
@@ -89,7 +97,7 @@ export default function SubCategoryGrid({
           fontSize: "2rem",
           letterSpacing: "2px",
           textTransform: "uppercase",
-          marginBottom: "3rem",
+          marginBottom: "1rem",
           paddingBottom: "1rem",
           borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
           color: "rgba(255, 255, 255, 0.9)",
@@ -97,6 +105,29 @@ export default function SubCategoryGrid({
       >
         {categoryLabel}
       </Typography>
+
+      <Box
+        onClick={onBack}
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          cursor: "pointer",
+          padding: "0.5rem 0",
+          marginBottom: "2rem",
+          color: "rgba(255, 255, 255, 0.7)",
+          transition: "color 0.3s",
+          fontFamily: "'Inconsolata', monospace",
+          fontSize: "0.9rem",
+          letterSpacing: "1px",
+          textTransform: "uppercase",
+          "&:hover": {
+            color: "white",
+          },
+        }}
+      >
+        ← Volver a Categorías
+      </Box>
 
       <Box
         sx={{

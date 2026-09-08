@@ -11,6 +11,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
+import Link from "next/link";
 import SubMenu from "./SubMenu";
 
 const FONT_SIZE = 2;
@@ -73,9 +74,9 @@ export default function Navbar() {
             paddingY: 1,
           }}
         >
-          <a href="/" style={{ color: "inherit", textDecoration: "none" }}>
+          <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
             Ale Vazquez
-          </a>
+          </Link>
         </Typography>
 
         {/* Menú desktop */}
@@ -145,9 +146,9 @@ export default function Navbar() {
               letterSpacing: "0.2em",
             }}
           >
-            <a href="/" style={{ color: "inherit", textDecoration: "none" }}>
+            <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
               Ale Vazquez
-            </a>
+            </Link>
           </Typography>
           <IconButton
             onClick={() => setMobileOpen(false)}
