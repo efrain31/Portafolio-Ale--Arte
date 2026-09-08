@@ -187,7 +187,7 @@ export default function GalleryIntro() {
               marginBottom: "1rem",
             }}
           >
-            © {new Date().getFullYear()} Ale Vázquez. Todos los derechos reservados.
+            © {new Date().getFullYear()} Ale Vázquez. Todos los derechos reservados X LAPLACE COMPANY.
           </Typography>
           <Box sx={{ display: "flex", gap: "1.2rem" }}>
             <a
