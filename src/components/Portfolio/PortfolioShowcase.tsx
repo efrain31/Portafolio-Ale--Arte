@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CategoryCard from "./CategoryCard";
@@ -13,6 +13,8 @@ import {
   foodImagesData,
   photoshootImagesData,
   studioImagesData,
+  studio7ImagesData,
+  solLunaImagesData,
   stillsImagesData,
   PublicidadImagesData,
 } from "@/data/data";
@@ -65,6 +67,14 @@ const subCategories: Record<CategoryType, SubCategory[]> = {
         { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/11.jpg" },
       ],
     },
+    {
+      name: "Studio 7",
+      images: studio7ImagesData,
+    },
+    {
+      name: "Sol & Luna",
+      images: solLunaImagesData,
+    },
   ],
   fotografia: [
     { name: "Retratos", images: jpgImagesData },
@@ -82,6 +92,27 @@ const subCategories: Record<CategoryType, SubCategory[]> = {
 
 export default function PortfolioShowcase() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
+  const [initialSubCategoryName, setInitialSubCategoryName] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Deep link (ej. desde el filmstrip de /galeria): /portafolio?category=modelaje&sub=Studio%207
+    // abre directo esa categoría y, si aplica, su subcategoría.
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get("category") as CategoryType | null;
+    if (category && subCategories[category]) {
+      setSelectedCategory(category);
+      setInitialSubCategoryName(params.get("sub"));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Disparado por el ícono de home del header cuando ya estamos en
+    // /portafolio (ese Link no navega porque es la misma ruta): vuelve
+    // a la vista principal de categorías.
+    const goIndex = () => setSelectedCategory(null);
+    window.addEventListener("portfolio:go-index", goIndex);
+    return () => window.removeEventListener("portfolio:go-index", goIndex);
+  }, []);
 
   const categories = [
     {
@@ -117,7 +148,7 @@ export default function PortfolioShowcase() {
       <Box
         sx={{
           height: "55vh",
-          backgroundImage: "url('/images/aleabout.jpg')",
+          backgroundImage: "url('/PORTADAINDEX.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
@@ -158,7 +189,7 @@ export default function PortfolioShowcase() {
               fontFamily: "'Inconsolata', monospace",
             }}
           >
-            Artista Visual | Diseñadora Gráfica
+            Modelo | Diseñadora Gráfica
           </Typography>
         </Box>
       </Box>
@@ -205,6 +236,8 @@ export default function PortfolioShowcase() {
               <SubCategoryGrid
                 category={selectedCategory}
                 subCategories={subCategories[selectedCategory] || []}
+                onBack={() => setSelectedCategory(null)}
+                initialSubCategoryName={initialSubCategoryName}
               />
             </motion.div>
           )}

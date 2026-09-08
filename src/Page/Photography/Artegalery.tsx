@@ -2,6 +2,7 @@
 
 import { Box, Typography } from "@mui/material";
 import ImageGrid from "@/components/galerias/ImagenGrid";
+import BackLink from "@/components/common/BackLink";
 import { artImagesData } from "@/data/data";
 import { useState } from "react";
 
@@ -32,7 +33,8 @@ export default function PhotographyGallery() {
         color: "white",
       }}
     >
-      <Box sx={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: 2 }}>
+      <Box sx={{ flex: 1, maxWidth: 1200, margin: "0 auto", padding: 2, paddingTop: { xs: "6.5rem", md: "7rem" } }}>
+        <BackLink href="/portafolio" label="Volver al portafolio" />
         <Typography
           sx={{
             fontFamily: "'Inconsolata', monospace",
