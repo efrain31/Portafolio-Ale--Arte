@@ -92,6 +92,11 @@ export default function GalleryIntro() {
           justifyContent: "space-between",
           padding: "3rem 2.5rem",
           zIndex: 10,
+          // En mobile el sidebar va en el flujo normal (no fijo), así que
+          // el orden visual lo controla "order": las imágenes primero,
+          // el menú después. En desktop el sidebar es fijo y el order no
+          // aplica (queda a la izquierda por su position).
+          order: { xs: 2, md: 0 },
         }}
       >
         <Box>
@@ -214,6 +219,7 @@ export default function GalleryIntro() {
           width: "100%",
           height: maxTranslate > 0 ? `calc(100vh + ${maxTranslate}px)` : "100vh",
           position: "relative",
+          order: { xs: 1, md: 0 },
         }}
       >
         {/* Mientras la sección pasa por el viewport, este contenedor queda
