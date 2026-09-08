@@ -38,16 +38,16 @@ export default function GalleryIntro() {
   const [maxTranslate, setMaxTranslate] = useState(0);
 
   // Calcula cuánto hay que desplazar horizontalmente el filmstrip para
-  // que la última imagen llegue al borde derecho del viewport (descontando
-  // el sidebar fijo).
+  // que la última imagen llegue al borde derecho del viewport. En desktop
+  // el sidebar es fijo (se descuenta su ancho); en mobile el sidebar va en
+  // el flujo normal arriba, así que cada imagen ocupa el ancho completo de
+  // pantalla (como un carrusel de una imagen a la vez).
   useEffect(() => {
     const computeMax = () => {
-      if (window.innerWidth < DESKTOP_BREAKPOINT) {
-        setMaxTranslate(0);
-        return;
-      }
-      const trackWidth = featured.length * ITEM_WIDTH;
-      const viewportWidth = window.innerWidth - SIDEBAR_WIDTH;
+      const isDesktop = window.innerWidth >= DESKTOP_BREAKPOINT;
+      const itemWidth = isDesktop ? ITEM_WIDTH : window.innerWidth;
+      const trackWidth = featured.length * itemWidth;
+      const viewportWidth = isDesktop ? window.innerWidth - SIDEBAR_WIDTH : window.innerWidth;
       setMaxTranslate(Math.max(trackWidth - viewportWidth, 0));
     };
     computeMax();
@@ -212,7 +212,7 @@ export default function GalleryIntro() {
         sx={{
           marginLeft: { xs: 0, md: `${SIDEBAR_WIDTH}px` },
           width: "100%",
-          height: { xs: "auto", md: maxTranslate > 0 ? `calc(100vh + ${maxTranslate}px)` : "100vh" },
+          height: maxTranslate > 0 ? `calc(100vh + ${maxTranslate}px)` : "100vh",
           position: "relative",
         }}
       >
@@ -220,19 +220,19 @@ export default function GalleryIntro() {
             fijo ("sticky") y solo el track interno se traslada en X. */}
         <Box
           sx={{
-            position: { xs: "static", md: "sticky" },
+            position: "sticky",
             top: 0,
-            height: { xs: "auto", md: "100vh" },
-            overflow: { xs: "visible", md: "hidden" },
+            height: "100vh",
+            overflow: "hidden",
           }}
         >
           <Box
             ref={trackRef}
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", md: "row" },
-              height: { xs: "auto", md: "100%" },
-              width: { xs: "100%", md: "max-content" },
+              flexDirection: "row",
+              height: "100%",
+              width: "max-content",
               willChange: "transform",
             }}
           >
@@ -251,8 +251,7 @@ export default function GalleryIntro() {
                   sx={{
                     position: "relative",
                     width: { xs: "100vw", md: `${ITEM_WIDTH}px` },
-                    minHeight: { xs: "60vh", md: "100%" },
-                    height: { xs: "60vh", md: "100%" },
+                    height: "100%",
                   }}
                 >
                   <Image
