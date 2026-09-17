@@ -98,6 +98,16 @@ export const solLunaImagesData: ImageData[] = [
   { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-16.jpg", },
 ];
 
+export const jerseryImagesData: ImageData[] = [
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/JERSEY/1.jpeg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/JERSEY/2.jpeg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/JERSEY/3.jpeg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/JERSEY/4.jpeg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/JERSEY/5.jpeg", },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/JERSEY/6.jpeg", },
+
+];
+
 // Galería de Ilustraciones
 export const IlustrationImagesData: ImageData[] = [
   { src: "/images/dataale/TRABAJOS/ART/1.JPG", },

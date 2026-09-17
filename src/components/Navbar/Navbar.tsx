@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import SubMenu from "./SubMenu";
 
@@ -36,6 +36,16 @@ const routesData = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Al estilo YSL: el header es transparente sobre el hero y se vuelve
+  // sólido (negro) en cuanto el usuario empieza a hacer scroll.
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <AppBar
@@ -49,10 +59,12 @@ export default function Navbar() {
           left: 0,
           right: 0,
           zIndex: 1200,
-          backgroundColor: "transparent",
+          backgroundColor: scrolled ? "rgba(0,0,0,0.98)" : "transparent",
+          borderBottom: scrolled ? "1px solid rgba(255,255,255,0.08)" : "1px solid transparent",
           backdropFilter: "none",
           WebkitBackdropFilter: "none",
           boxShadow: "none",
+          transition: "background-color 0.3s ease, border-color 0.3s ease",
         },
       }}
     >

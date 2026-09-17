@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Box, Typography, Button } from "@mui/material";
-import { motion, AnimatePresence } from "framer-motion";
+import { Box, Typography } from "@mui/material";
 import CategoryCard from "./CategoryCard";
 import SubCategoryGrid from "./SubCategoryGrid";
+// import ParallaxSection from "./ParallaxSection"; // desactivado junto con los usos de abajo
 import {
   modelImagesData,
   IlustrationImagesData,
@@ -17,6 +17,7 @@ import {
   solLunaImagesData,
   stillsImagesData,
   PublicidadImagesData,
+  jerseryImagesData,
 } from "@/data/data";
 
 type CategoryType = "modelaje" | "fotografia" | "diseño";
@@ -74,6 +75,10 @@ const subCategories: Record<CategoryType, SubCategory[]> = {
     {
       name: "Sol & Luna",
       images: solLunaImagesData,
+    },
+     {
+      name: "Jersey & Frame",
+      images: jerseryImagesData,
     },
   ],
   fotografia: [
@@ -144,74 +149,86 @@ export default function PortfolioShowcase() {
       }}
     >
 
-      {/* Hero */}
+      {/* Hero — estático (sin parallax): pantalla completa, tipografía plana
+          y muy espaciada, sin adornos ni scripts decorativos (referencia:
+          hero de ysl.com). Sin sticky/z-index: un Hero "pegado" con
+          z-index terminaba tapando (y capturando los clics de) todo lo
+          que viene después, ya que su ventana de "stuck" cubre el resto
+          del scroll — rompía la navegación de las categorías. */}
       <Box
         sx={{
-          height: "55vh",
+          height: { xs: "100vh", md: "calc(100vh + 60px)" },
           backgroundImage: "url('/PORTADAINDEX.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",
           display: "flex",
-          alignItems: "center",
+          alignItems: "flex-end",
           justifyContent: "center",
           textAlign: "center",
-          padding: "1.5rem",
           position: "relative",
-          marginTop: "-60px",
-          paddingTop: "80px",
-          "&::before": {
+          marginTop: { xs: 0, md: "-60px" },
+          "&::after": {
             content: '""',
             position: "absolute",
             inset: 0,
-            background: "rgba(0,0,0,0.25)",
+            background: "linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%)",
             zIndex: 1,
           },
         }}
       >
-        <Box sx={{ position: "relative", zIndex: 2 }}>
+        <Box sx={{ position: "relative", zIndex: 2, paddingBottom: "5rem" }}>
           <Typography
             sx={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "clamp(2.5rem, 8vw, 4.5rem)",
-              fontWeight: 300,
-              marginBottom: "0.5rem",
+              fontFamily: "'Inconsolata', monospace",
+              fontSize: "clamp(1.8rem, 6vw, 3.2rem)",
+              fontWeight: 700,
+              letterSpacing: "0.35em",
+              textTransform: "uppercase",
+              marginBottom: "0.9rem",
             }}
           >
-            Portafolio Profesional
+            Portafolio
           </Typography>
           <Typography
             sx={{
-              fontSize: "0.9rem",
-              color: "rgba(255, 255, 255, 0.6)",
-              letterSpacing: "2px",
+              fontSize: "0.75rem",
+              color: "rgba(255, 255, 255, 0.65)",
+              letterSpacing: "0.3em",
               textTransform: "uppercase",
               fontFamily: "'Inconsolata', monospace",
             }}
           >
-            Modelo | Diseñadora Gráfica
+           Artista Visual | Diseñadora Gráfica | Modelo | Fotógrafa
           </Typography>
         </Box>
       </Box>
 
-      {/* Contenido Principal */}
-      <Box sx={{ flex: 1, maxWidth: 1400, margin: "0 auto", width: "100%", padding: "4rem 2rem" }}>
-        <AnimatePresence mode="wait">
-          {selectedCategory === null ? (
-            // Vista de Categorías Principales
-            <motion.div
-              key="main-view"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
+      {/* Contenido Principal — grids a sangre (sin margen ni gap entre
+          piezas), como las categorías de ysl.com. */}
+      <Box sx={{ flex: 1, width: "100%" }}>
+        {selectedCategory === null ? (
+            // Vista de Categorías Principales — scroll normal, sin
+            // sticky/z-index encimados: esa combinación (varias secciones
+            // "pegadas" compitiendo por z-index) hacía que capas
+            // decorativas taparan la grilla y le robaran los clics. El
+            // efecto de parallax (drift de la imagen al hacer scroll) se
+            // mantiene vía useParallax, solo se quita el "pin + cubre".
+            <Box>
+              {/* <ParallaxSection
+                image="/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-4.jpg"
+                label="Proyecto Catrina"
+              /> */}
+
+              {/* Grilla de categorías — contenido normal (no sticky), así
+                  siempre queda arriba y siempre recibe el click. */}
               <Box
                 sx={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-                  gap: "2rem",
+                  gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
                   width: "100%",
+                  backgroundColor: "#000000",
+                  paddingTop: { xs: "6rem", md: "12rem" },
+                  paddingBottom: { xs: "10rem", md: "18rem" },
                 }}
               >
                 {categories.map((category, index) => (
@@ -223,25 +240,26 @@ export default function PortfolioShowcase() {
                   />
                 ))}
               </Box>
-            </motion.div>
+
+              {/* <ParallaxSection
+                image="/images/dataale/SOBREMI/SHOOTINGS/MARUATHA/7.JPG"
+                label="Studio"
+              /> */}
+
+              {/* <ParallaxSection
+                image="/images/dataale/SOBREMI/SHOOTINGS/CANTADRINK/4.jpg"
+                label="Sol & Luna"
+              /> */}
+            </Box>
           ) : (
             // Vista de Subcategorías
-            <motion.div
-              key={`${selectedCategory}-view`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <SubCategoryGrid
-                category={selectedCategory}
-                subCategories={subCategories[selectedCategory] || []}
-                onBack={() => setSelectedCategory(null)}
-                initialSubCategoryName={initialSubCategoryName}
-              />
-            </motion.div>
+            <SubCategoryGrid
+              category={selectedCategory}
+              subCategories={subCategories[selectedCategory] || []}
+              onBack={() => setSelectedCategory(null)}
+              initialSubCategoryName={initialSubCategoryName}
+            />
           )}
-        </AnimatePresence>
       </Box>
     </Box>
   );

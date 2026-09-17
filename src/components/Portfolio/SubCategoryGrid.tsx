@@ -5,6 +5,7 @@ import { Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import ImageGrid from "@/components/galerias/ImagenGrid";
 import { ImageData } from "@/data/data";
+import { useParallax } from "./useParallax";
 
 interface SubCategoryGridProps {
   category: string;
@@ -14,6 +15,113 @@ interface SubCategoryGridProps {
   }>;
   onBack: () => void;
   initialSubCategoryName?: string | null;
+}
+
+// Enlace de retorno minimal, sin caja ni flecha decorativa — solo texto
+// espaciado que se subraya al pasar el cursor (referencia: breadcrumbs de
+// ysl.com).
+function BackLink({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <Box
+      onClick={onClick}
+      sx={{
+        display: "inline-block",
+        cursor: "pointer",
+        padding: "1.5rem 1.5rem 0",
+        color: "rgba(255, 255, 255, 0.6)",
+        fontFamily: "'Inconsolata', monospace",
+        fontSize: "0.7rem",
+        letterSpacing: "0.2em",
+        textTransform: "uppercase",
+        transition: "color 0.2s",
+        "&:hover": {
+          color: "white",
+          textDecoration: "underline",
+          textUnderlineOffset: "4px",
+        },
+      }}
+    >
+      {label}
+    </Box>
+  );
+}
+
+// Tarjeta de subcategoría con la misma capa de parallax + zoom al hover que
+// las tarjetas principales (CategoryCard).
+function SubCategoryTile({
+  name,
+  image,
+  delay,
+  onClick,
+}: {
+  name: string;
+  image?: string;
+  delay: number;
+  onClick: () => void;
+}) {
+  const { ref, offset } = useParallax(35);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4, delay }}
+      onClick={onClick}
+      style={{ cursor: "pointer" }}
+    >
+      <Box
+        ref={ref}
+        sx={{
+          position: "relative",
+          height: { xs: 340, md: 440 },
+          overflow: "hidden",
+          background: "#000000",
+          "&:hover img": {
+            transform: "scale(1.04)",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            inset: "-12% 0",
+            height: "124%",
+            willChange: "transform",
+          }}
+          style={{ transform: `translateY(${offset}px)` }}
+        >
+          <img
+            src={image}
+            alt={name}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transition: "transform 0.6s ease",
+              display: "block",
+            }}
+          />
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "1.2rem 1rem",
+          fontFamily: "'Inconsolata', monospace",
+          fontSize: "0.8rem",
+          fontWeight: 500,
+          letterSpacing: "0.25em",
+          textTransform: "uppercase",
+          color: "white",
+        }}
+      >
+        {name}
+      </Box>
+    </motion.div>
+  );
 }
 
 export default function SubCategoryGrid({
@@ -41,46 +149,26 @@ export default function SubCategoryGrid({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        <Box sx={{ marginBottom: "2rem" }}>
-          <Box
-            onClick={() => setSelectedSubCategory(null)}
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              cursor: "pointer",
-              padding: "0.5rem 0",
-              color: "rgba(255, 255, 255, 0.7)",
-              transition: "color 0.3s",
-              fontFamily: "'Inconsolata', monospace",
-              fontSize: "0.9rem",
-              letterSpacing: "1px",
-              textTransform: "uppercase",
-              "&:hover": {
-                color: "white",
-              },
-            }}
-          >
-            ← Volver a {categoryLabel}
-          </Box>
-        </Box>
+        <BackLink label={`← Volver a ${categoryLabel}`} onClick={() => setSelectedSubCategory(null)} />
 
         <Typography
           sx={{
             fontFamily: "'Inconsolata', monospace",
-            fontSize: "1.8rem",
-            letterSpacing: "2px",
+            fontSize: "1.4rem",
+            fontWeight: 700,
+            letterSpacing: "0.3em",
             textTransform: "uppercase",
-            marginBottom: "2rem",
-            paddingBottom: "1rem",
-            borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
-            color: "rgba(255, 255, 255, 0.9)",
+            color: "white",
+            textAlign: "center",
+            padding: "2.5rem 1.5rem",
           }}
         >
           {subCategories[selectedSubCategory].name}
         </Typography>
 
-        <ImageGrid images={subCategories[selectedSubCategory].images} />
+        <Box sx={{ padding: "0 1.5rem 3rem" }}>
+          <ImageGrid images={subCategories[selectedSubCategory].images} />
+        </Box>
       </motion.div>
     );
   }
@@ -91,115 +179,40 @@ export default function SubCategoryGrid({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
+      <BackLink label="← Volver a Categorías" onClick={onBack} />
+
       <Typography
         sx={{
           fontFamily: "'Inconsolata', monospace",
-          fontSize: "2rem",
-          letterSpacing: "2px",
+          fontSize: "1.4rem",
+          fontWeight: 700,
+          letterSpacing: "0.3em",
           textTransform: "uppercase",
-          marginBottom: "1rem",
-          paddingBottom: "1rem",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
-          color: "rgba(255, 255, 255, 0.9)",
+          color: "white",
+          textAlign: "center",
+          padding: "2.5rem 1.5rem",
         }}
       >
         {categoryLabel}
       </Typography>
 
-      <Box
-        onClick={onBack}
-        sx={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          cursor: "pointer",
-          padding: "0.5rem 0",
-          marginBottom: "2rem",
-          color: "rgba(255, 255, 255, 0.7)",
-          transition: "color 0.3s",
-          fontFamily: "'Inconsolata', monospace",
-          fontSize: "0.9rem",
-          letterSpacing: "1px",
-          textTransform: "uppercase",
-          "&:hover": {
-            color: "white",
-          },
-        }}
-      >
-        ← Volver a Categorías
-      </Box>
-
+      {/* Grid a sangre de subcategorías — misma lógica que el grid de
+          categorías principales: sin gap, sin borde, hover con zoom leve. */}
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: "2rem",
+          gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" },
+          width: "100%",
         }}
       >
         {subCategories.map((subCat, index) => (
-          <motion.div
+          <SubCategoryTile
             key={subCat.name}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
+            name={subCat.name}
+            image={subCat.images[0]?.src}
+            delay={index * 0.06}
             onClick={() => setSelectedSubCategory(index)}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                height: 300,
-                overflow: "hidden",
-                cursor: "pointer",
-                background: "#000000",
-                border: "1px solid rgba(255, 255, 255, 0.05)",
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  transform: "translateY(-8px)",
-                  borderColor: "rgba(255, 255, 255, 0.2)",
-                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.8)",
-                  "& img": {
-                    transform: "scale(1.05)",
-                  },
-                  "& .label": {
-                    opacity: 1,
-                  },
-                },
-              }}
-            >
-              <img
-                src={subCat.images[0]?.src}
-                alt={subCat.name}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  transition: "transform 0.3s ease",
-                  display: "block",
-                }}
-              />
-
-              <Box
-                className="label"
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  width: "100%",
-                  background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 100%)",
-                  padding: "2rem 1rem 1rem",
-                  fontSize: "0.9rem",
-                  letterSpacing: "1px",
-                  textTransform: "uppercase",
-                  color: "white",
-                  opacity: 0,
-                  transition: "opacity 0.3s ease",
-                  fontFamily: "'Inconsolata', monospace",
-                }}
-              >
-                {subCat.name}
-              </Box>
-            </Box>
-          </motion.div>
+          />
         ))}
       </Box>
     </motion.div>

@@ -16,6 +16,8 @@ const DESKTOP_BREAKPOINT = 900; // debe coincidir con el "md" de MUI
 // al estilo "filmstrip" horizontal, alternando entre las 5 series para que
 // no se repita carpeta en dos imágenes seguidas.
 const featured = [
+   { src: "/images/dataale/SOBREMI/SHOOTINGS/STUDIO7/STUDIO5.jpg", label: "Studio 7" },
+  { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-16.jpg", label: "Sol & Luna" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/CANTADRINK/1.jpg", label: "Canta Drink" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/MARUATHA/1.jpg", label: "Maruatha" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/1.jpg", label: "Proyecto Catrina" },
@@ -29,8 +31,6 @@ const featured = [
   { src: "/images/dataale/SOBREMI/SHOOTINGS/CANTADRINK/5.jpg", label: "Canta Drink" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/MARUATHA/5.jpg", label: "Maruatha" },
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/8.jpg", label: "Proyecto Catrina" },
-  { src: "/images/dataale/SOBREMI/SHOOTINGS/STUDIO7/STUDIO5.jpg", label: "Studio 7" },
-  { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-16.jpg", label: "Sol & Luna" },
 ];
 
 export default function GalleryIntro() {
