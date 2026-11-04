@@ -28,12 +28,11 @@ export default function Footer() {
     <Box
       component="footer"
       sx={{
-        "& > *": isSplash ? { visibility: "hidden" } : {},
         backgroundColor: "#000000",
         color: "white",
-        py: { xs: 6, md: 10 },
+        py: isSplash ? 3 : { xs: 6, md: 10 },
         px: 3,
-        mt: 8,
+        mt: isSplash ? 0 : 8,
         position: "relative",
         "&::before": {
           content: '""',
@@ -47,6 +46,9 @@ export default function Footer() {
         },
       }}
     >
+      {/* En el splash sólo queda una franja corta de fondo, sin contenido */}
+      {!isSplash && (
+      <>
       {/* Contenedor principal con grid */}
       <Box
         sx={{
@@ -226,6 +228,8 @@ export default function Footer() {
       >
         X LAPLACE COMPANY
       </Box>
+      </>
+      )}
     </Box>
   );
 }

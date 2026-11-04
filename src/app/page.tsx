@@ -12,7 +12,8 @@ export default function HeroPage() {
       style={{
         position: "relative",
         width: "100%",
-        minHeight: "calc(100vh - 200px)",
+        // Llena la pantalla menos la franja del footer (48px) para mostrar más imagen
+        minHeight: "calc(100svh - 48px)",
         overflow: "hidden",
         display: "flex",
         alignItems: "flex-end",
