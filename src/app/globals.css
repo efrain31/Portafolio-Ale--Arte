@@ -37,3 +37,9 @@ body {
   letter-spacing: 0.45em;
   text-transform: uppercase;
 }
+
+/* Intro animada del portafolio (variante C): sólo en móvil */
+.portfolio-intro-c { display: none; }
+@media (max-width: 899px) {
+  .portfolio-intro-c { display: flex; }
+}

@@ -6,8 +6,13 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
   // En el splash (home) sólo se muestra el fondo del footer, sin contenido
-  const isSplash = usePathname() === "/";
+  const isSplash = pathname === "/";
+
+  // En /galeria no se usa el footer global: la galería ya trae su propio
+  // menú con copyright y redes. Para volver a mostrarlo, comenta esta línea.
+  if (pathname === "/galeria") return null;
 
   const footerLink = {
     color: "rgba(255, 255, 255, 0.7)",

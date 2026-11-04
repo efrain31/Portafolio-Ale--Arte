@@ -7,6 +7,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import Image from "next/image";
 import Link from "next/link";
 import { navRoutes, normalizeSlug } from "@/data/navRoutes";
+import PortfolioCover from "./PortfolioCover";
 
 const SIDEBAR_WIDTH = 300;
 const ITEM_WIDTH = 420; // ancho fijo (desktop) de cada imagen del filmstrip
@@ -78,6 +79,9 @@ export default function GalleryIntro() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, minHeight: "100vh", backgroundColor: "#000000" }}>
+      {/* Portada de presentación (sólo móvil) antes del filmstrip */}
+      <PortfolioCover />
+
       {/* Sidebar */}
       <Box
         sx={{

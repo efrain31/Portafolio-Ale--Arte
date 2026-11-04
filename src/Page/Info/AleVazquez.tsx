@@ -1,5 +1,6 @@
 import { Box, Typography, Link } from "@mui/material";
 import BackLink from "@/components/common/BackLink";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 
 export default function ContactInfo() {
   return (
@@ -49,8 +50,40 @@ export default function ContactInfo() {
       {/* Separador opcional */}
       <Box sx={{ my: 2 }} />
 
-      {/* Segundo contacto */}
-      <Box>
+      {/* Botones Book y CV: descargan los PDF.
+          Los archivos van en public/docs/book.pdf y public/docs/cv.pdf */}
+      <Box sx={{ display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
+        {[
+          { label: "Book", href: "/docs/book.pdf", file: "Ale-Vazquez-Book.pdf" },
+          { label: "CV", href: "/docs/cv.pdf", file: "Ale-Vazquez-CV.pdf" },
+        ].map((btn) => (
+          <Box
+            key={btn.label}
+            component="a"
+            href={btn.href}
+            download={btn.file}
+            sx={{
+              minWidth: 140,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.6rem",
+              fontFamily: "'Inconsolata', monospace",
+              fontSize: "0.75rem",
+              letterSpacing: "0.3em",
+              textTransform: "uppercase",
+              color: "white",
+              textDecoration: "none",
+              border: "1px solid rgba(255,255,255,0.5)",
+              padding: "0.7rem 1.8rem",
+              transition: "border-color 0.3s, background 0.3s",
+              "&:hover": { borderColor: "white", background: "rgba(255,255,255,0.08)" },
+            }}
+          >
+            <FileDownloadOutlinedIcon sx={{ fontSize: 18 }} />
+            {btn.label}
+          </Box>
+        ))}
       </Box>
     </Box>
   );
