@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Box } from "@mui/material";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, type MotionValue } from "framer-motion";
 import Link from "next/link";
 import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import IosShareOutlinedIcon from "@mui/icons-material/IosShareOutlined";
@@ -186,7 +186,8 @@ function MacMenuBar() {
       <Box
         sx={{
           position: "absolute",
-          top: { xs: 64, md: 76 },
+          top: { xs: 64, md: 0 },
+          borderRadius: { md: "10px 10px 0 0" },
           left: 0,
           right: 0,
           height: 32,
@@ -225,6 +226,189 @@ function MacMenuBar() {
         </Box>
       </Box>
     </motion.div>
+  );
+}
+
+
+
+// Íconos de app estilo iOS dibujados en SVG (100×100, a sangre)
+const AppIcon = {
+  finder: (
+    <svg viewBox="0 0 100 100" aria-hidden>
+      <defs>
+        <linearGradient id="fdL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8fd8ff" /><stop offset="1" stopColor="#2b9bf4" /></linearGradient>
+        <linearGradient id="fdR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f2f6fb" /><stop offset="1" stopColor="#c9d6e6" /></linearGradient>
+      </defs>
+      <rect width="100" height="100" fill="url(#fdR)" />
+      <path d="M0 0 H56 Q46 30 52 50 Q46 72 54 100 H0 Z" fill="url(#fdL)" />
+      <rect x="30" y="30" width="5" height="14" rx="2.5" fill="#1b2a3a" />
+      <rect x="66" y="30" width="5" height="14" rx="2.5" fill="#1b2a3a" />
+      <path d="M24 66 Q50 84 78 66" fill="none" stroke="#1b2a3a" strokeWidth="4.5" strokeLinecap="round" />
+    </svg>
+  ),
+  launchpad: (
+    <svg viewBox="0 0 100 100" aria-hidden>
+      <defs><linearGradient id="lpBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f4f4f7" /><stop offset="1" stopColor="#c8c8ce" /></linearGradient></defs>
+      <rect width="100" height="100" fill="url(#lpBg)" />
+      {[["#ff5e57", "#ffb340", "#ffd60a"], ["#34c759", "#30b0c7", "#0a84ff"], ["#5e5ce6", "#bf5af2", "#ff375f"]].map((row, r) =>
+        row.map((c, k) => <rect key={`${r}${k}`} x={20 + k * 22} y={20 + r * 22} width="16" height="16" rx="4.5" fill={c} />)
+      )}
+    </svg>
+  ),
+  safari: (
+    <svg viewBox="0 0 100 100" aria-hidden>
+      <defs>
+        <linearGradient id="sfBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffffff" /><stop offset="1" stopColor="#e3e7ee" /></linearGradient>
+        <linearGradient id="sfDial" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4cc4ff" /><stop offset="1" stopColor="#1665e8" /></linearGradient>
+      </defs>
+      <rect width="100" height="100" fill="url(#sfBg)" />
+      <circle cx="50" cy="50" r="38" fill="url(#sfDial)" />
+      {Array.from({ length: 36 }).map((_, i) => {
+        const a = (i * 10 * Math.PI) / 180;
+        const r1 = i % 3 === 0 ? 30 : 33;
+        // Redondeado: Node y el navegador difieren en el último decimal de
+        // cos/sin, y eso rompía la hidratación (atributos distintos)
+        const pt = (r: number, f: (x: number) => number) => (50 + f(a) * r).toFixed(2);
+        return <line key={i} x1={pt(r1, Math.cos)} y1={pt(r1, Math.sin)} x2={pt(36, Math.cos)} y2={pt(36, Math.sin)} stroke="white" strokeWidth={i % 3 === 0 ? 1.6 : 0.9} opacity="0.85" />;
+      })}
+      <polygon points="50,50 72,28 55,55" fill="#ff3b30" />
+      <polygon points="50,50 28,72 45,45" fill="#ffffff" />
+    </svg>
+  ),
+  settings: (
+    <svg viewBox="0 0 100 100" aria-hidden>
+      <defs>
+        <linearGradient id="stBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#b9b9be" /><stop offset="1" stopColor="#6e6e74" /></linearGradient>
+        <radialGradient id="stGear" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stopColor="#d9d9de" /><stop offset="1" stopColor="#8a8a90" /></radialGradient>
+      </defs>
+      <rect width="100" height="100" fill="url(#stBg)" />
+      <g transform="translate(50 50)">
+        {Array.from({ length: 12 }).map((_, i) => <rect key={i} x="-4.5" y="-37" width="9" height="12" rx="2" fill="#3f3f44" transform={`rotate(${i * 30})`} />)}
+        <circle r="28" fill="#3f3f44" />
+        <circle r="24" fill="url(#stGear)" />
+        <circle r="14" fill="#55555b" />
+        <circle r="8" fill="#9a9aa0" />
+      </g>
+    </svg>
+  ),
+  instagram: (
+    <svg viewBox="0 0 100 100" aria-hidden>
+      <defs>
+        <radialGradient id="igBg" cx="0.3" cy="1.05" r="1.2"><stop offset="0" stopColor="#ffd776" /><stop offset="0.25" stopColor="#f3a150" /><stop offset="0.5" stopColor="#e1306c" /><stop offset="0.8" stopColor="#a334c4" /><stop offset="1" stopColor="#5851db" /></radialGradient>
+      </defs>
+      <rect width="100" height="100" fill="url(#igBg)" />
+      <rect x="22" y="22" width="56" height="56" rx="17" fill="none" stroke="white" strokeWidth="6" />
+      <circle cx="50" cy="50" r="13" fill="none" stroke="white" strokeWidth="6" />
+      <circle cx="66.5" cy="33.5" r="4" fill="white" />
+    </svg>
+  ),
+  camera: (
+    <svg viewBox="0 0 100 100" aria-hidden>
+      <defs>
+        <linearGradient id="cmBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ff6b5e" /><stop offset="1" stopColor="#c4271d" /></linearGradient>
+        <radialGradient id="cmLens" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stopColor="#6b7a96" /><stop offset="0.5" stopColor="#1d2433" /><stop offset="1" stopColor="#05070c" /></radialGradient>
+      </defs>
+      <rect width="100" height="100" fill="url(#cmBg)" />
+      <rect x="16" y="32" width="68" height="44" rx="9" fill="#f2f2f4" />
+      <rect x="38" y="24" width="24" height="12" rx="4" fill="#f2f2f4" />
+      <circle cx="50" cy="54" r="16" fill="#cfcfd4" />
+      <circle cx="50" cy="54" r="12" fill="url(#cmLens)" />
+      <circle cx="46" cy="50" r="3" fill="white" opacity="0.7" />
+      <circle cx="73" cy="40" r="3" fill="#ffcc00" />
+    </svg>
+  ),
+  trash: (
+    <svg viewBox="0 0 100 100" aria-hidden>
+      <defs>
+        <linearGradient id="trBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="rgba(255,255,255,0.55)" /><stop offset="1" stopColor="rgba(255,255,255,0.15)" /></linearGradient>
+        <linearGradient id="trBin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#d7dbe2" /><stop offset="0.5" stopColor="#ffffff" /><stop offset="1" stopColor="#b9bec8" /></linearGradient>
+      </defs>
+      <rect width="100" height="100" fill="url(#trBg)" />
+      <path d="M28 26 H72 L67 84 Q66 88 62 88 H38 Q34 88 33 84 Z" fill="url(#trBin)" opacity="0.92" />
+      <ellipse cx="50" cy="26" rx="23" ry="5" fill="#eef1f5" stroke="#aab0bb" strokeWidth="1" />
+      {[38, 44, 50, 56, 62].map((x) => <line key={x} x1={x} y1="33" x2={x + (x - 50) * 0.08} y2="82" stroke="#a7adb8" strokeWidth="1.4" />)}
+    </svg>
+  ),
+};
+
+// Dock estilo macOS con efecto lupa (íconos con enlaces reales)
+function DockIcon({ mouseX, base, label, href, external, active, bg, color = "white", children }: { mouseX: MotionValue<number>; base: number; label: string; href?: string; external?: boolean; active?: boolean; bg: string; color?: string; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const distance = useTransform(mouseX, (x) => {
+    const r = ref.current?.getBoundingClientRect();
+    return r ? x - (r.left + r.width / 2) : 9999;
+  });
+  const size = useSpring(useTransform(distance, [-130, 0, 130], [base, base * 1.55, base]), { stiffness: 260, damping: 20 });
+  const [hover, setHover] = useState(false);
+  const tile = (
+    <Box sx={{ position: "relative", width: "100%", height: "100%", borderRadius: "22.5%", overflow: "hidden", background: bg, color, boxShadow: "0 5px 12px rgba(0,0,0,0.4)", "& > svg": { display: "block", width: "100%", height: "100%" } }}>
+      {children}
+      {/* Brillo superior estilo iOS */}
+      <Box aria-hidden sx={{ position: "absolute", inset: 0, borderRadius: "inherit", background: "linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 45%)", boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.35)", pointerEvents: "none" }} />
+    </Box>
+  );
+  return (
+    <Box sx={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+      <AnimatePresence>
+        {hover && (
+          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} style={{ position: "absolute", bottom: "calc(100% + 12px)", whiteSpace: "nowrap", fontSize: "0.72rem", color: "white", background: "rgba(30,30,32,0.9)", padding: "0.25rem 0.6rem", borderRadius: "6px", pointerEvents: "none" }}>
+            {label}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <motion.div ref={ref} style={{ width: size, height: size }}>
+        {href ? (
+          <Box component="a" href={href} aria-label={label} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} sx={{ display: "block", width: "100%", height: "100%" }}>{tile}</Box>
+        ) : (
+          <Box aria-label={label} sx={{ width: "100%", height: "100%" }}>{tile}</Box>
+        )}
+      </motion.div>
+      <Box sx={{ width: 4, height: 4, borderRadius: "50%", background: active ? "rgba(255,255,255,0.85)" : "transparent", mt: "4px" }} />
+    </Box>
+  );
+}
+
+function MacDock({ isDesktop }: { isDesktop: boolean }) {
+  const mouseX = useMotionValue(Infinity);
+  const base = isDesktop ? 50 : 38;
+  const sep = <Box sx={{ width: "1px", alignSelf: "stretch", my: "6px", mb: "14px", background: "rgba(255,255,255,0.3)" }} />;
+  return (
+    <Box
+      component={motion.div}
+      initial={{ y: 60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, delay: 1.5, ease }}
+      sx={{ position: { xs: "relative", md: "absolute" }, left: 0, right: 0, bottom: { md: 16 }, mt: { xs: 4, md: 0 }, zIndex: 30, display: "flex", justifyContent: "center", pointerEvents: "none" }}
+    >
+      <Box
+        onMouseMove={(e) => mouseX.set(e.clientX)}
+        onMouseLeave={() => mouseX.set(Infinity)}
+        sx={{
+          pointerEvents: "auto",
+          display: "flex",
+          alignItems: "flex-end",
+          gap: { xs: 0.9, md: 1.3 },
+          padding: "8px 10px 2px",
+          borderRadius: "20px",
+          background: "rgba(210,195,175,0.28)",
+          backdropFilter: "blur(24px) saturate(160%)",
+          WebkitBackdropFilter: "blur(24px) saturate(160%)",
+          border: "1px solid rgba(255,255,255,0.22)",
+          boxShadow: "0 18px 40px rgba(0,0,0,0.45)",
+          maxWidth: "calc(100vw - 24px)",
+        }}
+      >
+        <DockIcon mouseX={mouseX} base={base} label="Inicio" href="/" bg="transparent">{AppIcon.finder}</DockIcon>
+        <DockIcon mouseX={mouseX} base={base} label="Portafolio" href="/portafolio" bg="transparent">{AppIcon.launchpad}</DockIcon>
+        <DockIcon mouseX={mouseX} base={base} label="Galería" href="/galeria" bg="transparent">{AppIcon.safari}</DockIcon>
+        <DockIcon mouseX={mouseX} base={base} label="Contacto" href="/info/contact" bg="transparent">{AppIcon.settings}</DockIcon>
+        {sep}
+        <DockIcon mouseX={mouseX} base={base} label="Instagram" href="https://www.instagram.com" external bg="transparent">{AppIcon.instagram}</DockIcon>
+        <DockIcon mouseX={mouseX} base={base} label="Sobre mí" href="/info/about" active bg="transparent">{AppIcon.camera}</DockIcon>
+        {sep}
+        <DockIcon mouseX={mouseX} base={base} label="Papelera" bg="transparent">{AppIcon.trash}</DockIcon>
+      </Box>
+    </Box>
   );
 }
 
@@ -280,15 +464,47 @@ export default function AboutMeHero() {
         textTransform: "none",
         // Papel claro con textura muy suave
         background: "radial-gradient(ellipse at 50% 15%, #1a1a1c 0%, #0b0b0c 55%, #000 100%)",
-        paddingTop: { xs: "8rem", md: "9rem" },
-        paddingBottom: { xs: "3rem", md: "4rem" },
+        paddingTop: { xs: "8rem", md: "6.5rem" },
+        paddingBottom: { xs: "3rem", md: "5rem" },
       }}
     >
+      {/* ——— Laptop (sólo escritorio): marco con notch, pantalla y base ——— */}
+      <Box sx={{ position: { xs: "static", md: "relative" }, maxWidth: { md: 1260 }, mx: "auto", px: { md: 3 } }}>
+      <Box
+        component={motion.div}
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease }}
+        sx={{
+          position: { xs: "static", md: "relative" },
+          background: { md: "linear-gradient(180deg, #2b2b2e, #161618)" },
+          borderRadius: { md: "28px 28px 12px 12px" },
+          padding: { md: "16px" },
+          boxShadow: { md: "0 0 0 1px rgba(255,255,255,0.08), 0 40px 140px rgba(26,107,255,0.14)" },
+        }}
+      >
+        {/* Notch con cámara */}
+        <Box aria-hidden sx={{ display: { xs: "none", md: "flex" }, position: "absolute", top: 16, left: "50%", transform: "translateX(-50%)", width: 170, height: 26, background: "#161618", borderRadius: "0 0 12px 12px", zIndex: 35, alignItems: "center", justifyContent: "center" }}>
+          <Box sx={{ width: 8, height: 8, borderRadius: "50%", background: "radial-gradient(circle at 35% 35%, #3a4a66, #0b0f18)" }} />
+        </Box>
+        {/* Pantalla (overflow visible: algunas piezas "salen" de ella) */}
+        <Box
+          sx={{
+            position: { xs: "static", md: "relative" },
+            borderRadius: { md: "10px" },
+            background: { md: "radial-gradient(ellipse at 50% 15%, #1d1d20 0%, #0d0d0f 60%, #060607 100%)" },
+            paddingTop: { md: "5.5rem" },
+            paddingBottom: { md: "7.5rem" },
+          }}
+        >
+        {/* Encendido de pantalla */}
+        <Box component={motion.div} aria-hidden initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ duration: 0.9, delay: 0.5 }} sx={{ display: { xs: "none", md: "block" }, position: "absolute", inset: 0, background: "#000", borderRadius: "10px", zIndex: 60, pointerEvents: "none" }} />
+
       {/* Barra de menú estilo Mac */}
       <MacMenuBar />
 
       {/* Selector de idioma */}
-      <Box sx={{ position: "absolute", top: { xs: "6.6rem", md: "7.6rem" }, right: { xs: 16, md: 32 }, zIndex: 20, display: "flex", gap: 0.5 }}>
+      <Box sx={{ position: "absolute", top: { xs: "6.6rem", md: "3rem" }, right: { xs: 16, md: 24 }, zIndex: 20, display: "flex", gap: 0.5 }}>
         {(["es", "en"] as const).map((l) => (
           <Box key={l} component="button" onClick={() => setLang(l)} sx={{ border: `1px solid ${fg}`, borderRadius: "999px", padding: "0.2rem 0.65rem", fontSize: "0.72rem", fontWeight: 700, cursor: "pointer", background: lang === l ? fg : "transparent", color: lang === l ? ink : fg }}>
             {l.toUpperCase()}
@@ -366,7 +582,7 @@ export default function AboutMeHero() {
         }}
       >
         {/* Miniaturas tipo archivo */}
-        <Box sx={{ position: { xs: "relative", md: "absolute" }, left: { md: "2%" }, top: { md: 0 }, display: "flex", gap: { xs: 1, md: 1.5 }, zIndex: 5 }}>
+        <Box sx={{ position: { xs: "relative", md: "absolute" }, left: { md: "-5%" }, top: { md: 0 }, display: "flex", gap: { xs: 1, md: 1.5 }, zIndex: 5 }}>
           {IMG.thumbs.map((th, i) => (
             <Box
               key={th.name}
@@ -467,18 +683,18 @@ export default function AboutMeHero() {
 
         {/* Carpetas */}
         <Box sx={{ display: { xs: "flex", md: "contents" }, gap: 3, justifyContent: "center" }}>
-          <Folder href="/portafolio?category=modelaje" label="MODELAJE" delay={2.3} sx={{ left: { md: "88%" }, top: { md: 170 } }} />
+          <Folder href="/portafolio?category=modelaje" label="MODELAJE" delay={2.3} sx={{ left: { md: "70%" }, top: { md: 175 } }} />
           <Folder href="/portafolio?category=fotografia" label="FOTOGRAFÍA" delay={2.45} sx={{ left: { md: "1%" }, top: { md: 220 } }} />
           <Folder href={`/portafolio?category=${encodeURIComponent("diseño")}`} label="DISEÑO" delay={2.6} sx={{ left: { md: "1%" }, top: { md: 365 } }} />
         </Box>
 
         {/* Resultado (seleccionado) */}
-        <MacWindow title="MODELO.JPG" dots="blue" selected delay={2.2} drag={isDesktop} constraints={stageRef} sx={{ left: { md: "68%" }, top: { md: 150 }, zIndex: 5, width: { xs: 240, md: 220 } }}>
+        <MacWindow title="MODELO.JPG" dots="blue" selected delay={2.2} drag={isDesktop} constraints={stageRef} sx={{ left: { md: "84%" }, top: { md: 120 }, zIndex: 8, width: { xs: 240, md: 220 } }}>
           <Box component="img" src={IMG.result} alt="" draggable={false} sx={{ display: "block", width: "100%", height: { xs: 280, md: 250 }, objectFit: "cover", objectPosition: "center 20%" }} />
         </MacWindow>
 
         {/* Detalle */}
-        <MacWindow title="DETALLE.JPG" dots="blue" delay={2.5} drag={isDesktop} constraints={stageRef} sx={{ left: { md: "2%" }, top: { md: 560 }, zIndex: 5, width: { xs: 240, md: 190 }, display: { xs: "none", md: "block" } }}>
+        <MacWindow title="DETALLE.JPG" dots="blue" delay={2.5} drag={isDesktop} constraints={stageRef} sx={{ left: { md: "-6%" }, top: { md: 560 }, zIndex: 8, width: { xs: 240, md: 190 }, display: { xs: "none", md: "block" } }}>
           <Box component="img" src={IMG.detail} alt="" draggable={false} sx={{ display: "block", width: "100%", height: 190, objectFit: "cover" }} />
         </MacWindow>
 
@@ -488,7 +704,7 @@ export default function AboutMeHero() {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 2.6, duration: 0.8, ease }}
-          sx={{ position: { xs: "relative", md: "absolute" }, left: { md: "66%" }, top: { md: 470 }, zIndex: 5, width: { xs: "100%", md: 300 }, maxWidth: 360 }}
+          sx={{ position: { xs: "relative", md: "absolute" }, left: { md: "74%" }, top: { md: 470 }, zIndex: 8, width: { xs: "100%", md: 300 }, maxWidth: 360 }}
         >
           <Box sx={{ background: "#f4f4f4", color: ink, border: "1px solid #d8d8d8", borderRadius: "8px", padding: "1.1rem 1.2rem", boxShadow: "0 18px 40px rgba(0,0,0,0.1)" }}>
             <AnimatePresence mode="wait">
@@ -510,6 +726,15 @@ export default function AboutMeHero() {
         </Box>
       </Box>
 
+        {/* Dock */}
+        <MacDock isDesktop={isDesktop} />
+        </Box>
+      </Box>
+      {/* Base de la laptop */}
+      <Box aria-hidden sx={{ display: { xs: "none", md: "block" }, position: "relative", height: 20, mx: "-3%", background: "linear-gradient(180deg, #e4e4e7, #97979d)", borderRadius: "2px 2px 24px 24px", boxShadow: "0 30px 60px rgba(0,0,0,0.7)" }}>
+        <Box sx={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 170, height: 7, background: "#7b7b81", borderRadius: "0 0 10px 10px" }} />
+      </Box>
+      </Box>
     </Box>
   );
 }
