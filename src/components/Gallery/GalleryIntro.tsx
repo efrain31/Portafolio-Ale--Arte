@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
+import { motion, AnimatePresence } from "framer-motion";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import EmailIcon from "@mui/icons-material/Email";
 import Image from "next/image";
@@ -34,9 +35,61 @@ const featured = [
   { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/8.jpg", label: "Proyecto Catrina" },
 ];
 
+// Indicador de scroll: "DESLIZA" + línea con una luz que baja.
+function ScrollHint({ visible, sx }: { visible: boolean; sx: object }) {
+  return (
+    <AnimatePresence>
+      {visible && (
+        <Box
+          component={motion.div}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          aria-hidden
+          sx={{
+            position: "absolute",
+            zIndex: 20,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.8rem",
+            pointerEvents: "none",
+            ...sx,
+          }}
+        >
+          <Box
+            sx={{
+              fontFamily: "'Inconsolata', monospace",
+              fontSize: "0.65rem",
+              letterSpacing: "0.4em",
+              color: "white",
+              textShadow: "0 1px 8px rgba(0,0,0,0.8)",
+            }}
+          >
+            DESLIZA
+          </Box>
+          <Box sx={{ position: "relative", width: "1px", height: 56, background: "rgba(255,255,255,0.3)", overflow: "hidden" }}>
+            <motion.div
+              animate={{ y: ["-100%", "260%"] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: [0.65, 0, 0.35, 1] }}
+              style={{ position: "absolute", left: 0, width: 1, height: 20, background: "white" }}
+            />
+          </Box>
+        </Box>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function GalleryIntro() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [maxTranslate, setMaxTranslate] = useState(0);
+  // El menú lateral aparece hasta que se termina de recorrer la tira de
+  // fotos; mientras tanto se muestra el indicador de scroll.
+  const [reachedEnd, setReachedEnd] = useState(false);
+  const [measured, setMeasured] = useState(false);
 
   // Calcula cuánto hay que desplazar horizontalmente el filmstrip para
   // que la última imagen llegue al borde derecho del viewport. En desktop
@@ -50,6 +103,7 @@ export default function GalleryIntro() {
       const trackWidth = featured.length * itemWidth;
       const viewportWidth = isDesktop ? window.innerWidth - SIDEBAR_WIDTH : window.innerWidth;
       setMaxTranslate(Math.max(trackWidth - viewportWidth, 0));
+      setMeasured(true);
     };
     computeMax();
     window.addEventListener("resize", computeMax);
@@ -65,17 +119,21 @@ export default function GalleryIntro() {
     const handleScroll = () => {
       if (maxTranslate <= 0 || !trackRef.current) {
         if (trackRef.current) trackRef.current.style.transform = "none";
+        // Si la tira cabe completa en pantalla no hay nada que recorrer
+        if (measured && maxTranslate <= 0) setReachedEnd(true);
         return;
       }
       const rect = section.getBoundingClientRect();
       const progress = Math.min(Math.max(-rect.top / maxTranslate, 0), 1);
       trackRef.current.style.transform = `translateX(-${progress * maxTranslate}px)`;
+      // Una vez que llega al final, el menú se queda visible
+      if (progress >= 0.98) setReachedEnd(true);
     };
 
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [maxTranslate]);
+  }, [maxTranslate, measured]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, minHeight: "100vh", backgroundColor: "#000000" }}>
@@ -101,9 +159,24 @@ export default function GalleryIntro() {
           // el menú después. En desktop el sidebar es fijo y el order no
           // aplica (queda a la izquierda por su position).
           order: { xs: 2, md: 0 },
+          // Menú oculto hasta terminar la tira de fotos; entra con un leve
+          // desplazamiento (el bloque de abajo con un pequeño retraso).
+          "& > .sidebar-block": {
+            opacity: reachedEnd ? 1 : 0,
+            transform: reachedEnd ? "none" : "translateY(18px)",
+            visibility: reachedEnd ? "visible" : "hidden",
+            transition: "opacity 0.8s ease, transform 0.8s cubic-bezier(0.22,1,0.36,1), visibility 0.8s",
+          },
+          "& > .sidebar-block:last-of-type": { transitionDelay: reachedEnd ? "0.25s" : "0s" },
         }}
       >
-        <Box>
+        {/* Indicador de scroll en el lugar del menú (escritorio) */}
+        <ScrollHint
+          visible={!reachedEnd}
+          sx={{ display: { xs: "none", md: "flex" }, inset: 0 }}
+        />
+
+        <Box className="sidebar-block">
           <Link href="/" style={{ textDecoration: "none" }}>
             <Typography
               sx={{
@@ -181,7 +254,7 @@ export default function GalleryIntro() {
           </Box>
         </Box>
 
-        <Box>
+        <Box className="sidebar-block">
           <Typography
             sx={{
               fontFamily: "'Inconsolata', monospace",
@@ -236,6 +309,24 @@ export default function GalleryIntro() {
             overflow: "hidden",
           }}
         >
+          {/* Indicador de scroll sobre las fotos (móvil y tablet) */}
+          <ScrollHint
+            visible={!reachedEnd}
+            sx={{
+              display: { xs: "flex", md: "none" },
+              left: 0,
+              right: 0,
+              bottom: "6rem",
+              width: "fit-content",
+              margin: "0 auto",
+              padding: "0.9rem 1.1rem 0.8rem",
+              borderRadius: "14px",
+              background: "rgba(0,0,0,0.45)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+            }}
+          />
+
           <Box
             ref={trackRef}
             sx={{

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import CategoryCard from "./CategoryCard";
+// import CategoryCard from "./CategoryCard"; // reemplazado por CategoryFlow
+import CategoryFlow, { PortfolioHero, type FlowCategory } from "./CategoryFlow";
 import SubCategoryGrid from "./SubCategoryGrid";
 // import ParallaxSection from "./ParallaxSection"; // desactivado junto con los usos de abajo
 import {
@@ -119,6 +120,30 @@ export default function PortfolioShowcase() {
     return () => window.removeEventListener("portfolio:go-index", goIndex);
   }, []);
 
+  // Flujo editorial de categorías (palabra gigante + fotos flotando).
+  // Las fotos salen de la primera imagen de las primeras series de cada una.
+  const flowCopy: Record<CategoryType, { word: string; description: string }> = {
+    modelaje: { word: "modelaje", description: "Campañas, editoriales y sesiones de estudio frente a cámara." },
+    fotografia: { word: "fotografía", description: "Retrato, producto, food y stills: la mirada detrás de la cámara." },
+    diseño: { word: "diseño", description: "Ilustración, restauración y publicidad: imagen hecha a mano y en digital." },
+  };
+  const flowCategories: FlowCategory[] = (Object.keys(flowCopy) as CategoryType[]).map((id) => ({
+    id,
+    ...flowCopy[id],
+    series: subCategories[id].map((s) => s.name),
+    images: subCategories[id]
+      .map((s) => s.images[0]?.src)
+      .filter((src): src is string => Boolean(src))
+      .slice(0, 3),
+  }));
+
+  const handleSelect = (id: string) => {
+    setSelectedCategory(id as CategoryType);
+    // El flujo es largo: al entrar, sube al inicio del contenido
+    document.getElementById("portfolio-content")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  /* Tarjetas anteriores (grilla de 3), reemplazadas por el flujo:
   const categories = [
     {
       id: "modelaje",
@@ -136,6 +161,7 @@ export default function PortfolioShowcase() {
       image: "/images/dataale/TRABAJOS/ART/1.JPG",
     },
   ];
+  */
 
   return (
     <Box
@@ -149,6 +175,13 @@ export default function PortfolioShowcase() {
       }}
     >
 
+      {/* Portada dinámica (mismo lenguaje que el flujo de categorías) */}
+      <PortfolioHero image="/PORTADAINDEX.jpg" categories={flowCategories} onSelect={handleSelect} />
+
+      {/* Portada anterior (estática), desactivada. Para volver a usarla,
+          cambia este false por true y quita <PortfolioHero /> de arriba. */}
+      {false && (
+      <>
       {/* Hero — estático (sin parallax): pantalla completa, tipografía plana
           y muy espaciada, sin adornos ni scripts decorativos (referencia:
           hero de ysl.com). Sin sticky/z-index: un Hero "pegado" con
@@ -202,10 +235,12 @@ export default function PortfolioShowcase() {
           </Typography>
         </Box>
       </Box>
+      </>
+      )}
 
       {/* Contenido Principal — grids a sangre (sin margen ni gap entre
           piezas), como las categorías de ysl.com. */}
-      <Box sx={{ flex: 1, width: "100%" }}>
+      <Box id="portfolio-content" sx={{ flex: 1, width: "100%" }}>
         {selectedCategory === null ? (
             // Vista de Categorías Principales — scroll normal, sin
             // sticky/z-index encimados: esa combinación (varias secciones
@@ -219,8 +254,12 @@ export default function PortfolioShowcase() {
                 label="Proyecto Catrina"
               /> */}
 
-              {/* Grilla de categorías — contenido normal (no sticky), así
-                  siempre queda arriba y siempre recibe el click. */}
+              <CategoryFlow
+                categories={flowCategories}
+                onSelect={handleSelect}
+              />
+
+              {/* Grilla de categorías anterior (reemplazada por CategoryFlow)
               <Box
                 sx={{
                   display: "grid",
@@ -240,6 +279,7 @@ export default function PortfolioShowcase() {
                   />
                 ))}
               </Box>
+              */}
 
               {/* <ParallaxSection
                 image="/images/dataale/SOBREMI/SHOOTINGS/MARUATHA/7.JPG"

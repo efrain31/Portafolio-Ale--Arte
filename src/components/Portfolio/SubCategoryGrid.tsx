@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import ImageGrid from "@/components/galerias/ImagenGrid";
 import { ImageData } from "@/data/data";
 import { useParallax } from "./useParallax";
+import SubCategoryColumns from "./SubCategoryColumns";
 
 interface SubCategoryGridProps {
   category: string;
@@ -196,8 +197,19 @@ export default function SubCategoryGrid({
         {categoryLabel}
       </Typography>
 
-      {/* Grid a sangre de subcategorías — misma lógica que el grid de
-          categorías principales: sin gap, sin borde, hover con zoom leve. */}
+      {/* Subcategorías en columnas (aplica a Modelaje, Fotografía y Diseño):
+          hover asoma la foto, clic la expande, "Ver serie" abre la galería. */}
+      <SubCategoryColumns
+        items={subCategories}
+        categoryLabel={categoryLabel}
+        onOpen={(index) => {
+          setSelectedSubCategory(index);
+          window.scrollTo({ top: 0 });
+          document.getElementById("portfolio-content")?.scrollIntoView();
+        }}
+      />
+
+      {/* Grid anterior de subcategorías (tarjetas), reemplazado por las columnas:
       <Box
         sx={{
           display: "grid",
@@ -215,6 +227,7 @@ export default function SubCategoryGrid({
           />
         ))}
       </Box>
+      */}
     </motion.div>
   );
 }

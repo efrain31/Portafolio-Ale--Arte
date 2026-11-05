@@ -13,6 +13,8 @@ export default function Footer() {
   // En /galeria no se usa el footer global: la galería ya trae su propio
   // menú con copyright y redes. Para volver a mostrarlo, comenta esta línea.
   if (pathname === "/galeria") return null;
+  // En "Sobre mí" tampoco: la vista de escritorio ya trae su dock con enlaces.
+  if (pathname === "/info/about") return null;
 
   const footerLink = {
     color: "rgba(255, 255, 255, 0.7)",
