@@ -2,739 +2,519 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Box } from "@mui/material";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, type MotionValue } from "framer-motion";
-import Link from "next/link";
-import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
-import IosShareOutlinedIcon from "@mui/icons-material/IosShareOutlined";
-import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
-import WifiIcon from "@mui/icons-material/Wifi";
-import BatteryFullIcon from "@mui/icons-material/BatteryFull";
-import SearchIcon from "@mui/icons-material/Search";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 
-// "Sobre mí" con estética editorial clara (referencia: póster de presets):
-// titular gigante con una palabra "seleccionada" (recuadro azul con
-// tiradores y cursor), miniaturas tipo archivo, nota escrita a mano,
-// ventanas de foto estilo macOS que se pueden arrastrar, menú contextual,
-// carpetas azules, lista con palomitas y un botón azul grande.
+// "Sobre mí" editorial (referencia: página "About me" de revista): frase
+// pequeña y espaciada arriba, "SOBRE MÍ" gigante en tipografía condensada a
+// sangre, foto que se monta sobre las letras y texto justificado a un lado.
+// Entradas: la frase se "cierra" (el espaciado se reduce), las letras suben
+// una por una, la foto se revela como cortina y los párrafos aparecen en
+// cascada. Al hacer scroll, las letras y la foto se mueven a distinto ritmo.
 
+const condensed = "'Anton', 'Bebas Neue', Impact, sans-serif";
 const sans = "'Helvetica Neue', Helvetica, Arial, sans-serif";
-const hand = "'Caveat', cursive";
-const blue = "#1a6bff";
-const ink = "#111"; // texto oscuro dentro de tarjetas y ventanas claras
-const fg = "#f5f5f5"; // texto claro sobre el fondo negro
-const noteBlue = "#5b95ff";
+const mono = "'Inconsolata', monospace";
+const bone = "#efeae0";
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const TEXT = {
   es: {
-    hello: "Hola, soy",
-    sub: ["artista visual, diseñadora", "gráfica, modelo y fotógrafa"],
-    note: ["El arte es producto", "de la espiritualidad"],
-    statement:
-      "A través del arte es como nos conectamos con las demás personas y con nosotros mismos.",
-    checks: ["Capturar y transmitir emociones", "La observación por el detalle", "Diseño e ilustración", "Modelaje y fotografía"],
-    menu: ["Copiar enlace", "Compartir…", "Ver portafolio"],
-    cta: "VER PORTAFOLIO",
-    cv: "Descargar CV",
-    copied: "¡Enlace copiado!",
+    tagline: "Capturando y transmitiendo emociones a través del arte",
+    tools: "HERRAMIENTAS",
+    title: "SOBRE MÍ",
+    paragraphs: [
+      "¡Hola! Soy Ale Vázquez, artista visual, diseñadora gráfica, modelo y fotógrafa.",
+      "El arte es producto de la espiritualidad. A través de él, es como nos conectamos con las demás personas y con nosotros mismos.",
+      "Los dos principales diferenciadores en mis productos artísticos son capturar y transmitir emociones, y la observación por el detalle.",
+    ],
+    signature: "ALE VÁZQUEZ — ARTISTA VISUAL",
   },
   en: {
-    hello: "Hi, I'm",
-    sub: ["visual artist, graphic", "designer, model and photographer"],
-    note: ["Art is a product", "of spirituality"],
-    statement: "Through art, we connect with others and with ourselves.",
-    checks: ["Capturing and conveying emotions", "Attention to detail", "Design & illustration", "Modeling & photography"],
-    menu: ["Copy link", "Share…", "View portfolio"],
-    cta: "VIEW PORTFOLIO",
-    cv: "Download CV",
-    copied: "Link copied!",
+    tagline: "Capturing and conveying emotions through art",
+    tools: "TOOLS",
+    title: "ABOUT ME",
+    paragraphs: [
+      "Hi! I'm Ale Vázquez, a visual artist, graphic designer, model and photographer.",
+      "Art is a product of spirituality. Through it, we connect with others and with ourselves.",
+      "The two main differentiators in my artistic work are capturing and conveying emotions, and attention to detail.",
+    ],
+    signature: "ALE VÁZQUEZ — VISUAL ARTIST",
   },
 };
 
-const IMG = {
-  main: "/images/aleabout.jpg",
-  result: "/images/dataale/SOBREMI/SHOOTINGS/STUDIO7/STUDIO1.jpg",
-  detail: "/images/dataale/SOBREMI/SHOOTINGS/CANTADRINK/3.jpg",
-  thumbs: [
-    { src: "/images/dataale/SOBREMI/SHOOTINGS/MARUATHA/1.jpg", name: "MARUATHA.JPG", sub: "Maruatha" },
-    { src: "/images/dataale/SOBREMI/SHOOTINGS/SOLUNA/Estrella-1.jpg", name: "SOLUNA.JPG", sub: "Sol & Luna" },
-    { src: "/images/dataale/SOBREMI/SHOOTINGS/PROYECTOCATRINA/1.jpg", name: "CATRINA.JPG", sub: "Proyecto Catrina" },
-  ],
-};
 
-// Cursor tipo flecha (blanco con borde negro)
-function Cursor({ size = 30 }: { size?: number }) {
-  return (
-    <svg width={size} height={size * 1.13} viewBox="0 0 30 34" aria-hidden style={{ filter: "drop-shadow(0 3px 4px rgba(0,0,0,0.25))" }}>
-      <path d="M3 2 L3 27 L9.5 21 L14 31 L18.5 29 L14 19.5 L23 19.5 Z" fill="white" stroke="black" strokeWidth="1.8" strokeLinejoin="round" />
-    </svg>
-  );
-}
+// Herramientas (íconos estilo Adobe: cuadro oscuro con siglas de color)
+type Tool = { code: string; name: string; bg: string; fg: string; glyph?: ReactNode };
 
-// Ventana estilo macOS (arrastrable en escritorio)
-function MacWindow({
-  title,
-  children,
-  delay,
-  drag,
-  constraints,
-  sx,
-  dots = "traffic",
-  selected = false,
-}: {
-  title: string;
-  children: ReactNode;
-  delay: number;
-  drag: boolean;
-  constraints: React.RefObject<HTMLDivElement | null>;
-  sx?: object;
-  dots?: "traffic" | "blue";
-  selected?: boolean;
-}) {
-  return (
-    <Box
-      component={motion.div}
-      drag={drag}
-      // Sin dragConstraints: al redimensionar la ventana del navegador,
-      // los límites se recalculan y movían las ventanas solas.
-      dragMomentum={false}
-      dragElastic={0.1}
-      whileDrag={{ scale: 1.03, zIndex: 40, cursor: "grabbing" }}
-      initial={{ opacity: 0, y: 40, scale: 0.92 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ type: "spring", stiffness: 170, damping: 20, delay }}
-      sx={{ position: { xs: "relative", md: "absolute" }, cursor: drag ? "grab" : "default", touchAction: drag ? "none" : "auto", ...sx }}
-    >
-      <Box sx={{ position: "relative", background: "#f4f4f4", border: "1px solid #d5d5d5", borderRadius: "6px", boxShadow: "0 18px 40px rgba(0,0,0,0.12)", overflow: "visible" }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: "6px", padding: "7px 10px", borderBottom: "1px solid #ddd" }}>
-          {dots === "traffic"
-            ? ["#ff5f57", "#febc2e", "#28c840"].map((c) => <Box key={c} sx={{ width: 11, height: 11, borderRadius: "50%", background: c }} />)
-            : [0, 1].map((i) => <Box key={i} sx={{ width: 9, height: 9, borderRadius: "50%", background: blue }} />)}
-          <Box sx={{ fontSize: "0.72rem", letterSpacing: "0.04em", color: "#333", ml: 1 }}>{title}</Box>
-        </Box>
-        <Box sx={{ padding: "6px" }}>{children}</Box>
-        {/* Tiradores de selección */}
-        {selected &&
-          [
-            { left: -6, top: 30 },
-            { right: -6, top: 30 },
-            { left: -6, bottom: -6 },
-            { right: -6, bottom: -6 },
-          ].map((pos, i) => (
-            <motion.span
-              key={i}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: delay + 0.5 + i * 0.06, type: "spring", stiffness: 400 }}
-              style={{ position: "absolute", width: 11, height: 11, background: "white", border: `2px solid ${blue}`, ...pos }}
-            />
-          ))}
-      </Box>
-    </Box>
-  );
-}
-
-function Folder({ href, label, sx, delay }: { href: string; label: string; sx: object; delay: number }) {
-  return (
-    <Box
-      component={motion.div}
-      initial={{ opacity: 0, scale: 0.4, rotate: -8 }}
-      animate={{ opacity: 1, scale: 1, rotate: 0 }}
-      transition={{ type: "spring", stiffness: 220, damping: 14, delay }}
-      sx={{ position: { xs: "relative", md: "absolute" }, zIndex: 6, ...sx }}
-    >
-      <Box component={Link} href={href} aria-label={label} sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, textDecoration: "none", color: fg, "&:hover svg": { transform: "translateY(-4px)" } }}>
-        <svg width="92" height="70" viewBox="0 0 100 76" aria-hidden style={{ transition: "transform 0.25s", filter: "drop-shadow(0 10px 14px rgba(26,107,255,0.25))" }}>
-          <path d="M4 10 Q4 4 10 4 H36 Q40 4 43 8 L47 13 H90 Q96 13 96 19 V24 H4 Z" fill="#2f8bff" />
-          <rect x="2" y="20" width="96" height="54" rx="7" fill="#46a0ff" />
-        </svg>
-        <Box sx={{ fontSize: "0.7rem", letterSpacing: "0.08em" }}>{label}</Box>
-      </Box>
-    </Box>
-  );
-}
+const TOOLS: Tool[] = [
+  { code: "Ps", name: "Photoshop", bg: "#001e36", fg: "#31a8ff" },
+  { code: "Ai", name: "Illustrator", bg: "#330000", fg: "#ff9a00" },
+  { code: "Ae", name: "After Effects", bg: "#00005b", fg: "#9999ff" },
+  { code: "Pr", name: "Premiere Pro", bg: "#2a0634", fg: "#ea77ff" },
+  { code: "Id", name: "InDesign", bg: "#49021f", fg: "#ff3366" },
+  { code: "Lr", name: "Lightroom", bg: "#001e36", fg: "#31a8ff" },
+  // IA: íconos genéricos (no son los logotipos oficiales)
+  {
+    code: "Claude",
+    name: "Claude",
+    bg: "#d97757",
+    fg: "#f5d9c8",
+    glyph: (
+      <svg viewBox="0 0 40 40" width="62%" height="62%" aria-hidden>
+        {Array.from({ length: 10 }).map((_, i) => (
+          <rect key={i} x="18.6" y="3" width="2.8" height="15" rx="1.4" fill="#fff6ef" transform={`rotate(${i * 36} 20 20)`} />
+        ))}
+      </svg>
+    ),
+  },
+  {
+    code: "GPT",
+    name: "ChatGPT",
+    bg: "#111111",
+    fg: "#e8e8e8",
+    glyph: (
+      <svg viewBox="0 0 40 40" width="64%" height="64%" aria-hidden>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <rect key={i} x="13" y="6" width="14" height="22" rx="7" fill="none" stroke="#f2f2f2" strokeWidth="2.4" transform={`rotate(${i * 60} 20 20)`} />
+        ))}
+      </svg>
+    ),
+  },
+  {
+    code: "Gemini",
+    name: "Gemini",
+    bg: "#0d1117",
+    fg: "#8ab4f8",
+    glyph: (
+      <svg viewBox="0 0 40 40" width="66%" height="66%" aria-hidden>
+        <defs>
+          <linearGradient id="gemGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#4f8df7" />
+            <stop offset="0.55" stopColor="#9b72f2" />
+            <stop offset="1" stopColor="#d96570" />
+          </linearGradient>
+        </defs>
+        <path d="M20 2 C21.5 12 28 18.5 38 20 C28 21.5 21.5 28 20 38 C18.5 28 12 21.5 2 20 C12 18.5 18.5 12 20 2 Z" fill="url(#gemGrad)" />
+      </svg>
+    ),
+  },
+];
 
 
-// Barra de menú estilo macOS: logo, nombre, menús (enlaces reales) y a la
-// derecha íconos de estado con fecha y hora en vivo.
-function MacMenuBar() {
-  const [now, setNow] = useState<Date | null>(null);
+// "Patio de juegos" de herramientas: cada ícono es un cuerpo con gravedad,
+// rebote contra paredes y choques entre ellos. Se pueden agarrar y aventar,
+// y cada tanto alguno brinca para que sigan jugando. Las posiciones se
+// calculan sólo en el navegador (el HTML del servidor las deja ocultas).
+function ToolsPlayground({ tools }: { tools: Tool[] }) {
+  const areaRef = useRef<HTMLDivElement>(null);
+  const elRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
-    setNow(new Date());
-    const id = setInterval(() => setNow(new Date()), 15_000);
-    return () => clearInterval(id);
-  }, []);
-  const clock = now
-    ? `${now.toLocaleDateString("es-MX", { weekday: "short", day: "numeric", month: "short" })}  ${now.toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit", hour12: false })}`
-    : "";
-  const item = {
-    color: "rgba(255,255,255,0.92)",
-    textDecoration: "none",
-    padding: "0.15rem 0.6rem",
-    borderRadius: "5px",
-    fontSize: "0.82rem",
-    "&:hover": { background: blue, color: "white" },
-  } as const;
-  return (
-    <motion.div
-      initial={{ y: -30, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7, delay: 0.2, ease }}
-      style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 30 }}
-      className="mac-menubar"
-    >
-      <Box
-        sx={{
-          position: "absolute",
-          top: { xs: 64, md: 0 },
-          borderRadius: { md: "10px 10px 0 0" },
-          left: 0,
-          right: 0,
-          height: 32,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 0.9rem",
-          background: "rgba(38,38,40,0.72)",
-          backdropFilter: "blur(20px) saturate(160%)",
-          WebkitBackdropFilter: "blur(20px) saturate(160%)",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
-          color: "white",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 0.3 }}>
-          <Box component={Link} href="/" aria-label="Inicio" sx={{ ...item, fontWeight: 800, fontSize: "0.9rem" }}>AV</Box>
-          <Box sx={{ fontWeight: 700, fontSize: "0.82rem", padding: "0 0.6rem" }}>Ale Vázquez</Box>
-          <Box sx={{ display: { xs: "none", sm: "flex" }, alignItems: "center", gap: 0.2 }}>
-            {[
-              ["Sobre mí", "/info/about"],
-              ["Portafolio", "/portafolio"],
-              ["Galería", "/galeria"],
-              ["Contacto", "/info/contact"],
-            ].map(([label, href]) => (
-              <Box key={href} component={Link} href={href} sx={item}>{label}</Box>
-            ))}
-          </Box>
-        </Box>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.2, fontSize: "0.8rem", "& svg": { fontSize: 17 } }}>
-          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 1.2 }}>
-            <SearchIcon />
-            <WifiIcon />
-          </Box>
-          <BatteryFullIcon sx={{ transform: "rotate(90deg)" }} />
-          <Box sx={{ fontVariantNumeric: "tabular-nums", whiteSpace: "pre", textTransform: "capitalize" }}>{clock}</Box>
-        </Box>
-      </Box>
-    </motion.div>
-  );
-}
+    const area = areaRef.current;
+    if (!area) return;
+    const R = 31; // radio de choque (ícono de 60px)
+    const LABEL = 16; // espacio del nombre debajo del ícono
+    const G = 1500;
+    const E = 0.62; // rebote
+    let W = area.clientWidth;
+    let H = area.clientHeight;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // Empiezan arriba, escalonados, y caen
+    const bodies = tools.map((_, i) => ({
+      x: R + ((W - 2 * R) * ((i * 0.37) % 1)),
+      y: -R - i * 55,
+      vx: (i % 2 ? 1 : -1) * (60 + i * 12),
+      vy: 0,
+      a: 0,
+      drag: false,
+    }));
+    setReady(true);
 
+    const onResize = () => {
+      W = area.clientWidth;
+      H = area.clientHeight;
+    };
+    window.addEventListener("resize", onResize);
 
-// Íconos de app estilo iOS dibujados en SVG (100×100, a sangre)
-const AppIcon = {
-  finder: (
-    <svg viewBox="0 0 100 100" aria-hidden>
-      <defs>
-        <linearGradient id="fdL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8fd8ff" /><stop offset="1" stopColor="#2b9bf4" /></linearGradient>
-        <linearGradient id="fdR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f2f6fb" /><stop offset="1" stopColor="#c9d6e6" /></linearGradient>
-      </defs>
-      <rect width="100" height="100" fill="url(#fdR)" />
-      <path d="M0 0 H56 Q46 30 52 50 Q46 72 54 100 H0 Z" fill="url(#fdL)" />
-      <rect x="30" y="30" width="5" height="14" rx="2.5" fill="#1b2a3a" />
-      <rect x="66" y="30" width="5" height="14" rx="2.5" fill="#1b2a3a" />
-      <path d="M24 66 Q50 84 78 66" fill="none" stroke="#1b2a3a" strokeWidth="4.5" strokeLinecap="round" />
-    </svg>
-  ),
-  launchpad: (
-    <svg viewBox="0 0 100 100" aria-hidden>
-      <defs><linearGradient id="lpBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f4f4f7" /><stop offset="1" stopColor="#c8c8ce" /></linearGradient></defs>
-      <rect width="100" height="100" fill="url(#lpBg)" />
-      {[["#ff5e57", "#ffb340", "#ffd60a"], ["#34c759", "#30b0c7", "#0a84ff"], ["#5e5ce6", "#bf5af2", "#ff375f"]].map((row, r) =>
-        row.map((c, k) => <rect key={`${r}${k}`} x={20 + k * 22} y={20 + r * 22} width="16" height="16" rx="4.5" fill={c} />)
-      )}
-    </svg>
-  ),
-  safari: (
-    <svg viewBox="0 0 100 100" aria-hidden>
-      <defs>
-        <linearGradient id="sfBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffffff" /><stop offset="1" stopColor="#e3e7ee" /></linearGradient>
-        <linearGradient id="sfDial" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4cc4ff" /><stop offset="1" stopColor="#1665e8" /></linearGradient>
-      </defs>
-      <rect width="100" height="100" fill="url(#sfBg)" />
-      <circle cx="50" cy="50" r="38" fill="url(#sfDial)" />
-      {Array.from({ length: 36 }).map((_, i) => {
-        const a = (i * 10 * Math.PI) / 180;
-        const r1 = i % 3 === 0 ? 30 : 33;
-        // Redondeado: Node y el navegador difieren en el último decimal de
-        // cos/sin, y eso rompía la hidratación (atributos distintos)
-        const pt = (r: number, f: (x: number) => number) => (50 + f(a) * r).toFixed(2);
-        return <line key={i} x1={pt(r1, Math.cos)} y1={pt(r1, Math.sin)} x2={pt(36, Math.cos)} y2={pt(36, Math.sin)} stroke="white" strokeWidth={i % 3 === 0 ? 1.6 : 0.9} opacity="0.85" />;
-      })}
-      <polygon points="50,50 72,28 55,55" fill="#ff3b30" />
-      <polygon points="50,50 28,72 45,45" fill="#ffffff" />
-    </svg>
-  ),
-  settings: (
-    <svg viewBox="0 0 100 100" aria-hidden>
-      <defs>
-        <linearGradient id="stBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#b9b9be" /><stop offset="1" stopColor="#6e6e74" /></linearGradient>
-        <radialGradient id="stGear" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stopColor="#d9d9de" /><stop offset="1" stopColor="#8a8a90" /></radialGradient>
-      </defs>
-      <rect width="100" height="100" fill="url(#stBg)" />
-      <g transform="translate(50 50)">
-        {Array.from({ length: 12 }).map((_, i) => <rect key={i} x="-4.5" y="-37" width="9" height="12" rx="2" fill="#3f3f44" transform={`rotate(${i * 30})`} />)}
-        <circle r="28" fill="#3f3f44" />
-        <circle r="24" fill="url(#stGear)" />
-        <circle r="14" fill="#55555b" />
-        <circle r="8" fill="#9a9aa0" />
-      </g>
-    </svg>
-  ),
-  instagram: (
-    <svg viewBox="0 0 100 100" aria-hidden>
-      <defs>
-        <radialGradient id="igBg" cx="0.3" cy="1.05" r="1.2"><stop offset="0" stopColor="#ffd776" /><stop offset="0.25" stopColor="#f3a150" /><stop offset="0.5" stopColor="#e1306c" /><stop offset="0.8" stopColor="#a334c4" /><stop offset="1" stopColor="#5851db" /></radialGradient>
-      </defs>
-      <rect width="100" height="100" fill="url(#igBg)" />
-      <rect x="22" y="22" width="56" height="56" rx="17" fill="none" stroke="white" strokeWidth="6" />
-      <circle cx="50" cy="50" r="13" fill="none" stroke="white" strokeWidth="6" />
-      <circle cx="66.5" cy="33.5" r="4" fill="white" />
-    </svg>
-  ),
-  camera: (
-    <svg viewBox="0 0 100 100" aria-hidden>
-      <defs>
-        <linearGradient id="cmBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ff6b5e" /><stop offset="1" stopColor="#c4271d" /></linearGradient>
-        <radialGradient id="cmLens" cx="0.4" cy="0.35" r="0.7"><stop offset="0" stopColor="#6b7a96" /><stop offset="0.5" stopColor="#1d2433" /><stop offset="1" stopColor="#05070c" /></radialGradient>
-      </defs>
-      <rect width="100" height="100" fill="url(#cmBg)" />
-      <rect x="16" y="32" width="68" height="44" rx="9" fill="#f2f2f4" />
-      <rect x="38" y="24" width="24" height="12" rx="4" fill="#f2f2f4" />
-      <circle cx="50" cy="54" r="16" fill="#cfcfd4" />
-      <circle cx="50" cy="54" r="12" fill="url(#cmLens)" />
-      <circle cx="46" cy="50" r="3" fill="white" opacity="0.7" />
-      <circle cx="73" cy="40" r="3" fill="#ffcc00" />
-    </svg>
-  ),
-  trash: (
-    <svg viewBox="0 0 100 100" aria-hidden>
-      <defs>
-        <linearGradient id="trBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="rgba(255,255,255,0.55)" /><stop offset="1" stopColor="rgba(255,255,255,0.15)" /></linearGradient>
-        <linearGradient id="trBin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#d7dbe2" /><stop offset="0.5" stopColor="#ffffff" /><stop offset="1" stopColor="#b9bec8" /></linearGradient>
-      </defs>
-      <rect width="100" height="100" fill="url(#trBg)" />
-      <path d="M28 26 H72 L67 84 Q66 88 62 88 H38 Q34 88 33 84 Z" fill="url(#trBin)" opacity="0.92" />
-      <ellipse cx="50" cy="26" rx="23" ry="5" fill="#eef1f5" stroke="#aab0bb" strokeWidth="1" />
-      {[38, 44, 50, 56, 62].map((x) => <line key={x} x1={x} y1="33" x2={x + (x - 50) * 0.08} y2="82" stroke="#a7adb8" strokeWidth="1.4" />)}
-    </svg>
-  ),
-};
+    // Arrastrar y aventar
+    let dragIdx = -1;
+    let last = { x: 0, y: 0, t: 0 };
+    const toLocal = (e: PointerEvent) => {
+      const r = area.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    };
+    const downHandlers = tools.map((_, i) => (e: PointerEvent) => {
+      dragIdx = i;
+      bodies[i].drag = true;
+      const p = toLocal(e);
+      last = { ...p, t: performance.now() };
+      (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+      e.preventDefault();
+    });
+    const onMove = (e: PointerEvent) => {
+      if (dragIdx < 0) return;
+      const p = toLocal(e);
+      const now = performance.now();
+      const dt = Math.max((now - last.t) / 1000, 0.008);
+      const b = bodies[dragIdx];
+      b.vx = (p.x - last.x) / dt;
+      b.vy = (p.y - last.y) / dt;
+      b.x = Math.min(Math.max(p.x, R), W - R);
+      b.y = Math.min(Math.max(p.y, R), H - R - LABEL);
+      last = { ...p, t: now };
+    };
+    const onUp = () => {
+      if (dragIdx < 0) return;
+      const b = bodies[dragIdx];
+      b.drag = false;
+      b.vx = Math.max(Math.min(b.vx, 1800), -1800);
+      b.vy = Math.max(Math.min(b.vy, 1800), -1800);
+      dragIdx = -1;
+    };
+    elRefs.current.forEach((el, i) => el?.addEventListener("pointerdown", downHandlers[i]));
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
 
-// Dock estilo macOS con efecto lupa (íconos con enlaces reales)
-function DockIcon({ mouseX, base, label, href, external, active, bg, color = "white", children }: { mouseX: MotionValue<number>; base: number; label: string; href?: string; external?: boolean; active?: boolean; bg: string; color?: string; children: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const distance = useTransform(mouseX, (x) => {
-    const r = ref.current?.getBoundingClientRect();
-    return r ? x - (r.left + r.width / 2) : 9999;
-  });
-  const size = useSpring(useTransform(distance, [-130, 0, 130], [base, base * 1.55, base]), { stiffness: 260, damping: 20 });
-  const [hover, setHover] = useState(false);
-  const tile = (
-    <Box sx={{ position: "relative", width: "100%", height: "100%", borderRadius: "22.5%", overflow: "hidden", background: bg, color, boxShadow: "0 5px 12px rgba(0,0,0,0.4)", "& > svg": { display: "block", width: "100%", height: "100%" } }}>
-      {children}
-      {/* Brillo superior estilo iOS */}
-      <Box aria-hidden sx={{ position: "absolute", inset: 0, borderRadius: "inherit", background: "linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 45%)", boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.35)", pointerEvents: "none" }} />
-    </Box>
-  );
-  return (
-    <Box sx={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-      <AnimatePresence>
-        {hover && (
-          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} style={{ position: "absolute", bottom: "calc(100% + 12px)", whiteSpace: "nowrap", fontSize: "0.72rem", color: "white", background: "rgba(30,30,32,0.9)", padding: "0.25rem 0.6rem", borderRadius: "6px", pointerEvents: "none" }}>
-            {label}
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <motion.div ref={ref} style={{ width: size, height: size }}>
-        {href ? (
-          <Box component="a" href={href} aria-label={label} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} sx={{ display: "block", width: "100%", height: "100%" }}>{tile}</Box>
-        ) : (
-          <Box aria-label={label} sx={{ width: "100%", height: "100%" }}>{tile}</Box>
-        )}
-      </motion.div>
-      <Box sx={{ width: 4, height: 4, borderRadius: "50%", background: active ? "rgba(255,255,255,0.85)" : "transparent", mt: "4px" }} />
-    </Box>
-  );
-}
+    // Brincos ocasionales para que "jueguen" entre ellas
+    const kick = reduce
+      ? undefined
+      : setInterval(() => {
+          const b = bodies[Math.floor(Math.random() * bodies.length)];
+          if (b.drag) return;
+          b.vy -= 520 + Math.random() * 380;
+          b.vx += (Math.random() - 0.5) * 520;
+        }, 1800);
 
-function MacDock({ isDesktop }: { isDesktop: boolean }) {
-  const mouseX = useMotionValue(Infinity);
-  const base = isDesktop ? 50 : 38;
-  const sep = <Box sx={{ width: "1px", alignSelf: "stretch", my: "6px", mb: "14px", background: "rgba(255,255,255,0.3)" }} />;
+    // Pausar cuando no se ve
+    let visible = true;
+    const io = new IntersectionObserver(([en]) => (visible = en.isIntersecting));
+    io.observe(area);
+
+    let raf = 0;
+    let prev = performance.now();
+    const step = (now: number) => {
+      const dt = Math.min((now - prev) / 1000, 1 / 30);
+      prev = now;
+      if (visible) {
+        const floor = H - R - LABEL;
+        for (const b of bodies) {
+          if (b.drag) continue;
+          b.vy += G * dt;
+          b.x += b.vx * dt;
+          b.y += b.vy * dt;
+          if (b.x < R) { b.x = R; b.vx = Math.abs(b.vx) * E; }
+          if (b.x > W - R) { b.x = W - R; b.vx = -Math.abs(b.vx) * E; }
+          if (b.y > floor) {
+            b.y = floor;
+            b.vy = -Math.abs(b.vy) * E;
+            if (Math.abs(b.vy) < 40) b.vy = 0;
+            b.vx *= 0.985; // fricción del piso
+          }
+          if (b.y < R && b.vy < 0 && b.y > -400) { b.y = Math.max(b.y, R); b.vy = Math.abs(b.vy) * E; }
+          b.a += (b.vx * dt) / R; // rueda al moverse
+          // Quieto en el piso: se endereza poco a poco (al giro "derecho" más cercano)
+          if (b.y >= floor - 0.5 && Math.abs(b.vx) < 60) {
+            const target = Math.round(b.a / (Math.PI * 2)) * Math.PI * 2;
+            b.a += (target - b.a) * Math.min(1, dt * 6);
+          }
+        }
+        // Choques entre íconos
+        for (let i = 0; i < bodies.length; i++) {
+          for (let j = i + 1; j < bodies.length; j++) {
+            const A = bodies[i];
+            const B = bodies[j];
+            const dx = B.x - A.x;
+            const dy = B.y - A.y;
+            const d = Math.hypot(dx, dy) || 0.01;
+            if (d < 2 * R) {
+              const nx = dx / d;
+              const ny = dy / d;
+              const overlap = 2 * R - d;
+              const wa = A.drag ? 0 : B.drag ? 1 : 0.5;
+              const wb = 1 - wa;
+              A.x -= nx * overlap * wa;
+              A.y -= ny * overlap * wa;
+              B.x += nx * overlap * wb;
+              B.y += ny * overlap * wb;
+              const vn = (B.vx - A.vx) * nx + (B.vy - A.vy) * ny;
+              if (vn < 0) {
+                const jImp = (-(1 + E) * vn) / 2;
+                if (!A.drag) { A.vx -= jImp * nx; A.vy -= jImp * ny; }
+                if (!B.drag) { B.vx += jImp * nx; B.vy += jImp * ny; }
+              }
+            }
+          }
+        }
+        // Tras los choques, ningún ícono puede quedar fuera del área
+        for (const b of bodies) {
+          if (b.y > -R) {
+            b.x = Math.min(Math.max(b.x, R), W - R);
+            b.y = Math.min(b.y, floor);
+          }
+        }
+        bodies.forEach((b, i) => {
+          const el = elRefs.current[i];
+          if (el) el.style.transform = `translate(${(b.x - R).toFixed(1)}px, ${(b.y - R).toFixed(1)}px)`;
+          const tile = tileRefs.current[i];
+          if (tile) tile.style.transform = `rotate(${b.a.toFixed(3)}rad)`;
+        });
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      if (kick) clearInterval(kick);
+      io.disconnect();
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      elRefs.current.forEach((el, i) => el?.removeEventListener("pointerdown", downHandlers[i]));
+    };
+  }, [tools]);
+
   return (
     <Box
-      component={motion.div}
-      initial={{ y: 60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 1.5, ease }}
-      sx={{ position: { xs: "relative", md: "absolute" }, left: 0, right: 0, bottom: { md: 16 }, mt: { xs: 4, md: 0 }, zIndex: 30, display: "flex", justifyContent: "center", pointerEvents: "none" }}
+      ref={areaRef}
+      sx={{
+        position: "relative",
+        height: { xs: 300, md: 270 },
+        maxWidth: 520,
+        borderBottom: "1px solid rgba(239,234,224,0.25)",
+        overflow: "hidden",
+      }}
     >
-      <Box
-        onMouseMove={(e) => mouseX.set(e.clientX)}
-        onMouseLeave={() => mouseX.set(Infinity)}
-        sx={{
-          pointerEvents: "auto",
-          display: "flex",
-          alignItems: "flex-end",
-          gap: { xs: 0.9, md: 1.3 },
-          padding: "8px 10px 2px",
-          borderRadius: "20px",
-          background: "rgba(210,195,175,0.28)",
-          backdropFilter: "blur(24px) saturate(160%)",
-          WebkitBackdropFilter: "blur(24px) saturate(160%)",
-          border: "1px solid rgba(255,255,255,0.22)",
-          boxShadow: "0 18px 40px rgba(0,0,0,0.45)",
-          maxWidth: "calc(100vw - 24px)",
-        }}
-      >
-        <DockIcon mouseX={mouseX} base={base} label="Inicio" href="/" bg="transparent">{AppIcon.finder}</DockIcon>
-        <DockIcon mouseX={mouseX} base={base} label="Portafolio" href="/portafolio" bg="transparent">{AppIcon.launchpad}</DockIcon>
-        <DockIcon mouseX={mouseX} base={base} label="Galería" href="/galeria" bg="transparent">{AppIcon.safari}</DockIcon>
-        <DockIcon mouseX={mouseX} base={base} label="Contacto" href="/info/contact" bg="transparent">{AppIcon.settings}</DockIcon>
-        {sep}
-        <DockIcon mouseX={mouseX} base={base} label="Instagram" href="https://www.instagram.com" external bg="transparent">{AppIcon.instagram}</DockIcon>
-        <DockIcon mouseX={mouseX} base={base} label="Sobre mí" href="/info/about" active bg="transparent">{AppIcon.camera}</DockIcon>
-        {sep}
-        <DockIcon mouseX={mouseX} base={base} label="Papelera" bg="transparent">{AppIcon.trash}</DockIcon>
-      </Box>
+      {tools.map((tool, i) => (
+        <Box
+          key={tool.name}
+          ref={(el: HTMLDivElement | null) => {
+            elRefs.current[i] = el;
+          }}
+          title={tool.name}
+          sx={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: 62,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "3px",
+            cursor: "grab",
+            touchAction: "none",
+            userSelect: "none",
+            visibility: ready ? "visible" : "hidden",
+            "&:active": { cursor: "grabbing" },
+          }}
+          style={{ transform: "translate(0px, -200px)" }}
+        >
+          <Box
+            ref={(el: HTMLDivElement | null) => {
+              tileRefs.current[i] = el;
+            }}
+            sx={{
+              width: 60,
+              height: 60,
+              borderRadius: "14px",
+              background: tool.bg,
+              border: `2px solid ${tool.fg}`,
+              color: tool.fg,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: sans,
+              fontWeight: 700,
+              fontSize: "1.6rem",
+              letterSpacing: "-0.02em",
+              boxShadow: "0 10px 22px rgba(0,0,0,0.45)",
+            }}
+          >
+            {tool.glyph ?? tool.code}
+          </Box>
+          <Box sx={{ fontFamily: mono, fontSize: "0.6rem", color: "rgba(239,234,224,0.6)", whiteSpace: "nowrap", pointerEvents: "none" }}>{tool.name}</Box>
+        </Box>
+      ))}
     </Box>
   );
 }
 
 export default function AboutMeHero() {
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [isDesktop, setIsDesktop] = useState(false);
   const [lang, setLang] = useState<"es" | "en">("es");
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [toast, setToast] = useState(false);
   const t = TEXT[lang];
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 900px)");
-    const update = () => setIsDesktop(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    // El menú contextual aparece cuando el cursor animado "llega"
-    const id = setTimeout(() => setMenuOpen(true), 3000);
-    return () => {
-      mq.removeEventListener("change", update);
-      clearTimeout(id);
-    };
-  }, []);
-
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(`${window.location.origin}/info/about`);
-      setToast(true);
-      setTimeout(() => setToast(false), 1600);
-    } catch {
-      /* portapapeles no disponible */
-    }
-  };
-  const share = async () => {
-    const url = `${window.location.origin}/info/about`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "Ale Vázquez", url });
-      } catch {
-        /* cancelado */
-      }
-    } else copyLink();
-  };
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  // Parallax suave: las letras se van a la izquierda, la foto sube un poco
+  const titleX = useTransform(scrollYProgress, [0, 1], ["0%", "-8%"]);
+  const photoY = useTransform(scrollYProgress, [0, 1], [0, -80]);
 
   return (
     <Box
+      ref={ref}
       sx={{
         position: "relative",
         overflow: "hidden",
-        color: fg,
-        fontFamily: sans,
+        backgroundColor: "#000",
+        color: bone,
         letterSpacing: 0,
         textTransform: "none",
-        // Papel claro con textura muy suave
-        background: "radial-gradient(ellipse at 50% 15%, #1a1a1c 0%, #0b0b0c 55%, #000 100%)",
-        paddingTop: { xs: "8rem", md: "6.5rem" },
-        paddingBottom: { xs: "3rem", md: "5rem" },
+        paddingTop: { xs: "6.5rem", md: "7.5rem" },
+        paddingBottom: { xs: "4rem", md: "6rem" },
+        minHeight: "100vh",
       }}
     >
-      {/* ——— Laptop (sólo escritorio): marco con notch, pantalla y base ——— */}
-      <Box sx={{ position: { xs: "static", md: "relative" }, maxWidth: { md: 1260 }, mx: "auto", px: { md: 3 } }}>
-      <Box
-        component={motion.div}
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease }}
-        sx={{
-          position: { xs: "static", md: "relative" },
-          background: { md: "linear-gradient(180deg, #2b2b2e, #161618)" },
-          borderRadius: { md: "28px 28px 12px 12px" },
-          padding: { md: "16px" },
-          boxShadow: { md: "0 0 0 1px rgba(255,255,255,0.08), 0 40px 140px rgba(26,107,255,0.14)" },
-        }}
-      >
-        {/* Notch con cámara */}
-        <Box aria-hidden sx={{ display: { xs: "none", md: "flex" }, position: "absolute", top: 16, left: "50%", transform: "translateX(-50%)", width: 170, height: 26, background: "#161618", borderRadius: "0 0 12px 12px", zIndex: 35, alignItems: "center", justifyContent: "center" }}>
-          <Box sx={{ width: 8, height: 8, borderRadius: "50%", background: "radial-gradient(circle at 35% 35%, #3a4a66, #0b0f18)" }} />
-        </Box>
-        {/* Pantalla (overflow visible: algunas piezas "salen" de ella) */}
-        <Box
-          sx={{
-            position: { xs: "static", md: "relative" },
-            borderRadius: { md: "10px" },
-            background: { md: "radial-gradient(ellipse at 50% 15%, #1d1d20 0%, #0d0d0f 60%, #060607 100%)" },
-            paddingTop: { md: "5.5rem" },
-            paddingBottom: { md: "7.5rem" },
-          }}
-        >
-        {/* Encendido de pantalla */}
-        <Box component={motion.div} aria-hidden initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ duration: 0.9, delay: 0.5 }} sx={{ display: { xs: "none", md: "block" }, position: "absolute", inset: 0, background: "#000", borderRadius: "10px", zIndex: 60, pointerEvents: "none" }} />
-
-      {/* Barra de menú estilo Mac */}
-      <MacMenuBar />
-
-      {/* Selector de idioma */}
-      <Box sx={{ position: "absolute", top: { xs: "6.6rem", md: "3rem" }, right: { xs: 16, md: 24 }, zIndex: 20, display: "flex", gap: 0.5 }}>
+      {/* Idioma */}
+      <Box sx={{ position: "absolute", top: { xs: "5.2rem", md: "6rem" }, right: { xs: 16, md: 32 }, zIndex: 5, display: "flex", gap: 0.5 }}>
         {(["es", "en"] as const).map((l) => (
-          <Box key={l} component="button" onClick={() => setLang(l)} sx={{ border: `1px solid ${fg}`, borderRadius: "999px", padding: "0.2rem 0.65rem", fontSize: "0.72rem", fontWeight: 700, cursor: "pointer", background: lang === l ? fg : "transparent", color: lang === l ? ink : fg }}>
+          <Box
+            key={l}
+            component="button"
+            onClick={() => setLang(l)}
+            sx={{ border: `1px solid ${bone}`, borderRadius: "999px", padding: "0.15rem 0.6rem", fontFamily: mono, fontSize: "0.7rem", cursor: "pointer", background: lang === l ? bone : "transparent", color: lang === l ? "#000" : bone }}
+          >
             {l.toUpperCase()}
           </Box>
         ))}
       </Box>
 
-      {/* ——— Titular ——— */}
-      <Box sx={{ textAlign: "center", px: 2 }}>
-        <Box sx={{ overflow: "hidden" }}>
-          <motion.div key={`h-${lang}`} initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.9, ease }}>
-            <Box sx={{ fontWeight: 800, fontSize: { xs: "3.4rem", md: "7.5rem" }, lineHeight: 0.95, letterSpacing: "-0.045em" }}>{t.hello}</Box>
-          </motion.div>
-        </Box>
-        <Box sx={{ position: "relative", display: "inline-block", mt: { xs: 1, md: 1.5 } }}>
-          {/* Recuadro de selección azul que se dibuja */}
-          <motion.div
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.7, ease }}
-            style={{ position: "absolute", inset: "-4px -14px", background: "rgba(26,107,255,0.28)", border: `2px solid ${blue}`, transformOrigin: "left" }}
-          />
-          {[
-            { left: -22, top: -12 },
-            { right: -22, top: -12 },
-            { left: -22, bottom: -12 },
-            { right: -22, bottom: -12 },
-          ].map((pos, i) => (
-            <motion.span
-              key={i}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 1.3 + i * 0.06, type: "spring", stiffness: 420 }}
-              style={{ position: "absolute", width: 16, height: 16, background: blue, zIndex: 2, ...pos }}
-            />
-          ))}
-          <Box sx={{ overflow: "hidden", position: "relative" }}>
-            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ duration: 0.9, delay: 0.15, ease }}>
-              <Box sx={{ fontWeight: 800, fontSize: { xs: "3.4rem", md: "7.5rem" }, lineHeight: 1.02, letterSpacing: "-0.045em", px: { xs: 0.5, md: 1 } }}>Ale Vázquez</Box>
+      <AnimatePresence mode="wait">
+        <motion.div key={lang} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+          {/* Frase superior: el espaciado se "cierra" al entrar */}
+          <Box sx={{ textAlign: "center", px: 2, mt: { xs: 1.5, md: 1 } }}>
+            <motion.div
+              initial={{ opacity: 0, letterSpacing: "0.9em" }}
+              animate={{ opacity: 1, letterSpacing: "0.32em" }}
+              transition={{ duration: 1.6, ease }}
+              style={{ fontFamily: sans, fontSize: "clamp(0.62rem, 1.15vw, 0.95rem)", textTransform: "uppercase", lineHeight: 1.6 }}
+            >
+              {t.tagline}
             </motion.div>
           </Box>
-          {/* Cursor que llega a la esquina */}
-          <motion.div
-            initial={{ x: 120, y: 90, opacity: 0 }}
-            animate={{ x: 0, y: 0, opacity: 1 }}
-            transition={{ duration: 1, delay: 1.5, ease }}
-            style={{ position: "absolute", right: -48, bottom: -44, zIndex: 3 }}
-          >
-            <Cursor size={isDesktop ? 40 : 28} />
+
+          {/* Título gigante a sangre: cada letra sube desde abajo */}
+          <motion.div style={{ x: titleX }}>
+            <Box
+              aria-label={t.title}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                fontFamily: condensed,
+                fontSize: { xs: "29vw", md: "29vw" },
+                lineHeight: 0.86,
+                letterSpacing: "0.005em",
+                marginLeft: "-3vw",
+                marginRight: "-3vw",
+                mt: { xs: 0.5, md: 0.5 },
+                // Espacio para el acento de la "Í" (el recorte es para la entrada)
+                paddingTop: "0.14em",
+              }}
+            >
+              {Array.from(t.title).map((ch, i) => (
+                <motion.span
+                  key={`${ch}-${i}`}
+                  aria-hidden
+                  initial={{ y: "105%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 1, delay: 0.25 + i * 0.07, ease }}
+                  style={{ display: "inline-block", minWidth: ch === " " ? "0.22em" : undefined }}
+                >
+                  {ch}
+                </motion.span>
+              ))}
+            </Box>
           </motion.div>
-        </Box>
-        <motion.div key={`s-${lang}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.7 }}>
-          <Box sx={{ mt: { xs: 2.5, md: 3 }, fontSize: { xs: "1.15rem", md: "1.7rem" }, lineHeight: 1.25 }}>
-            {t.sub[0]}
-            <br />
-            {t.sub[1]}
+
+          {/* Foto (montada sobre las letras) + texto */}
+          <Box
+            sx={{
+              position: "relative",
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "40% 1fr" },
+              columnGap: { md: "6%" },
+              rowGap: 4,
+              alignItems: "start",
+              maxWidth: 1200,
+              mx: "auto",
+              px: { xs: 3, md: 6 },
+              mt: { xs: "-2vw", md: "-11.5vw" },
+            }}
+          >
+            <motion.div style={{ y: photoY }}>
+              <motion.div
+                initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
+                animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+                transition={{ duration: 1.3, delay: 0.9, ease: [0.76, 0, 0.24, 1] }}
+                style={{ position: "relative", overflow: "hidden", boxShadow: "0 30px 60px rgba(0,0,0,0.6)" }}
+              >
+                <motion.img
+                  src="/images/aleabout.jpg"
+                  alt="Ale Vázquez"
+                  initial={{ scale: 1.25 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 2, delay: 0.9, ease }}
+                  style={{ display: "block", width: "100%", aspectRatio: "2 / 3", objectFit: "cover", objectPosition: "center 30%" }}
+                />
+                {/* Grano de película muy sutil */}
+                <Box
+                  aria-hidden
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    pointerEvents: "none",
+                    opacity: 0.18,
+                    mixBlendMode: "overlay",
+                    backgroundImage:
+                      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+                  }}
+                />
+              </motion.div>
+            </motion.div>
+
+            <Box sx={{ pt: { md: "14vw" }, maxWidth: { md: 520 } }}>
+              {t.paragraphs.map((p, i) => (
+                <motion.p
+                  key={i}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.9, delay: 1.5 + i * 0.2, ease }}
+                  style={{ fontFamily: sans, fontSize: "clamp(1rem, 1.35vw, 1.2rem)", lineHeight: 1.55, textAlign: "justify", hyphens: "auto", margin: i ? "1.4em 0 0" : 0 }}
+                >
+                  {p}
+                </motion.p>
+              ))}
+              {/* Herramientas */}
+              <Box sx={{ mt: { xs: 5, md: 6 } }}>
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 2.1, ease }}
+                  style={{ fontFamily: condensed, fontSize: "clamp(1.8rem, 3vw, 2.6rem)", lineHeight: 1, letterSpacing: "0.01em", marginBottom: "1.1rem" }}
+                >
+                  {t.tools}
+                </motion.div>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 2.2 }}>
+                  <ToolsPlayground tools={TOOLS} />
+                </motion.div>
+              </Box>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 2.3 }}
+                style={{ marginTop: "3.5rem", textAlign: "right", fontFamily: sans, fontSize: "0.78rem", letterSpacing: "0.18em", color: "rgba(239,234,224,0.45)" }}
+              >
+                {t.signature}
+              </motion.div>
+            </Box>
           </Box>
         </motion.div>
-      </Box>
+      </AnimatePresence>
 
-      {/* ——— Composición ——— */}
-      <Box
-        ref={stageRef}
-        sx={{
-          position: "relative",
-          maxWidth: 1180,
-          mx: "auto",
-          mt: { xs: 4, md: 5 },
-          px: { xs: 2, md: 0 },
-          height: { md: 820 },
-          display: { xs: "flex", md: "block" },
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 3,
-        }}
-      >
-        {/* Miniaturas tipo archivo */}
-        <Box sx={{ position: { xs: "relative", md: "absolute" }, left: { md: "-5%" }, top: { md: 0 }, display: "flex", gap: { xs: 1, md: 1.5 }, zIndex: 5 }}>
-          {IMG.thumbs.map((th, i) => (
-            <Box
-              key={th.name}
-              component={motion.div}
-              initial={{ opacity: 0, y: -40, rotate: -6 + i * 4 }}
-              animate={{ opacity: 1, y: 0, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 160, damping: 16, delay: 1.6 + i * 0.12 }}
-            >
-              <Box
-                component={Link}
-                href={`/portafolio?category=modelaje&sub=${encodeURIComponent(th.sub)}`}
-                sx={{ display: "block", background: "#f6f6f6", border: "1px solid #d8d8d8", borderRadius: "4px", padding: "6px 6px 8px", boxShadow: "0 8px 18px rgba(0,0,0,0.08)", textDecoration: "none", color: ink, transition: "transform 0.25s", "&:hover": { transform: "translateY(-6px)" } }}
-              >
-                <Box component="img" src={th.src} alt={th.sub} sx={{ display: "block", width: { xs: 96, md: 118 }, height: { xs: 96, md: 132 }, objectFit: "cover" }} />
-                <Box sx={{ fontSize: { xs: "0.6rem", md: "0.7rem" }, mt: 0.8, letterSpacing: "0.04em" }}>{th.name}</Box>
-              </Box>
-            </Box>
-          ))}
-        </Box>
-
-        {/* Nota escrita a mano */}
-        <Box
-          component={motion.div}
-          initial={{ opacity: 0, rotate: -14, scale: 0.8 }}
-          animate={{ opacity: 1, rotate: -10, scale: 1 }}
-          transition={{ delay: 2, type: "spring", stiffness: 150 }}
-          sx={{ position: { xs: "relative", md: "absolute" }, left: { md: "60%" }, top: { md: 10 }, zIndex: 5, color: noteBlue }}
-        >
-          <Box sx={{ position: "relative", padding: "1.4rem 2rem", textAlign: "center", fontFamily: hand, fontSize: { xs: "1.5rem", md: "1.9rem" }, lineHeight: 1.05, fontWeight: 500 }}>
-            <svg viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden style={{ position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "visible" }}>
-              <motion.ellipse cx="100" cy="50" rx="98" ry="46" fill="none" stroke={noteBlue} strokeWidth="1.6" vectorEffect="non-scaling-stroke" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.2, delay: 2.1 }} />
-            </svg>
-            <AnimatePresence mode="wait">
-              <motion.div key={lang} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, delay: lang === "es" ? 2.3 : 0 }}>
-                {t.note[0]}
-                <br />
-                {t.note[1]}
-              </motion.div>
-            </AnimatePresence>
-          </Box>
-          {/* Flecha dibujada hacia la ventana principal */}
-          <Box component="svg" viewBox="0 0 90 60" aria-hidden sx={{ display: { xs: "none", md: "block" }, position: "absolute", left: -70, bottom: -40, width: 90, height: 60, overflow: "visible" }}>
-            <motion.path d="M85 5 C 60 10, 30 25, 8 50 M8 50 L 10 36 M8 50 L 22 47" fill="none" stroke={noteBlue} strokeWidth="1.8" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.8, delay: 3 }} />
-          </Box>
-        </Box>
-
-        {/* Ventana principal */}
-        <MacWindow title="ALE.JPG" delay={1.9} drag={isDesktop} constraints={stageRef} sx={{ left: { md: "17%" }, top: { md: 190 }, zIndex: 4, width: { xs: "100%", md: 520 }, maxWidth: { xs: 420, md: "none" } }}>
-          <Box sx={{ position: "relative", overflow: "hidden", height: { xs: 380, md: 560 } }}>
-            <motion.img
-              src={IMG.main}
-              alt="Ale Vázquez"
-              draggable={false}
-              initial={{ scale: 1.15 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 2.4, delay: 1.9, ease }}
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", display: "block" }}
-            />
-          </Box>
-          {/* Menú contextual */}
-          <AnimatePresence>
-            {menuOpen && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                style={{ position: "absolute", left: isDesktop ? -70 : 12, top: isDesktop ? 90 : 60, zIndex: 10, transformOrigin: "top left" }}
-              >
-                <Box sx={{ background: "rgba(250,250,250,0.92)", backdropFilter: "blur(14px)", border: "1px solid #ddd", borderRadius: "12px", padding: "6px", width: 220, boxShadow: "0 18px 40px rgba(0,0,0,0.15)", fontSize: "0.92rem" }}>
-                  {[
-                    { label: toast ? t.copied : t.menu[0], icon: <ContentCopyOutlinedIcon fontSize="small" />, onClick: copyLink },
-                    { label: t.menu[1], icon: <IosShareOutlinedIcon fontSize="small" />, onClick: share },
-                  ].map((item) => (
-                    <Box key={item.label} component="button" onClick={item.onClick} sx={{ display: "flex", alignItems: "center", gap: 1.2, width: "100%", padding: "0.5rem 0.7rem", border: 0, background: "none", borderRadius: "8px", cursor: "pointer", font: "inherit", color: ink, "&:hover": { background: "rgba(0,0,0,0.05)" } }}>
-                      {item.icon}
-                      {item.label}
-                    </Box>
-                  ))}
-                  <Box component={Link} href="/portafolio" sx={{ display: "flex", alignItems: "center", gap: 1.2, padding: "0.5rem 0.7rem", borderRadius: "8px", background: blue, color: "white", textDecoration: "none", mt: 0.3 }}>
-                    <AutoAwesomeOutlinedIcon fontSize="small" />
-                    {t.menu[2]}
-                  </Box>
-                </Box>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          {/* Cursor animado que va hacia "Ver portafolio" */}
-          <motion.div
-            initial={{ x: 220, y: 320, opacity: 0 }}
-            animate={{ x: isDesktop ? 120 : 160, y: isDesktop ? 200 : 170, opacity: 1 }}
-            transition={{ duration: 1.1, delay: 2.4, ease }}
-            style={{ position: "absolute", left: 0, top: 0, zIndex: 11, pointerEvents: "none" }}
-          >
-            <Cursor size={30} />
-          </motion.div>
-        </MacWindow>
-
-        {/* Carpetas */}
-        <Box sx={{ display: { xs: "flex", md: "contents" }, gap: 3, justifyContent: "center" }}>
-          <Folder href="/portafolio?category=modelaje" label="MODELAJE" delay={2.3} sx={{ left: { md: "70%" }, top: { md: 175 } }} />
-          <Folder href="/portafolio?category=fotografia" label="FOTOGRAFÍA" delay={2.45} sx={{ left: { md: "1%" }, top: { md: 220 } }} />
-          <Folder href={`/portafolio?category=${encodeURIComponent("diseño")}`} label="DISEÑO" delay={2.6} sx={{ left: { md: "1%" }, top: { md: 365 } }} />
-        </Box>
-
-        {/* Resultado (seleccionado) */}
-        <MacWindow title="MODELO.JPG" dots="blue" selected delay={2.2} drag={isDesktop} constraints={stageRef} sx={{ left: { md: "84%" }, top: { md: 120 }, zIndex: 8, width: { xs: 240, md: 220 } }}>
-          <Box component="img" src={IMG.result} alt="" draggable={false} sx={{ display: "block", width: "100%", height: { xs: 280, md: 250 }, objectFit: "cover", objectPosition: "center 20%" }} />
-        </MacWindow>
-
-        {/* Detalle */}
-        <MacWindow title="DETALLE.JPG" dots="blue" delay={2.5} drag={isDesktop} constraints={stageRef} sx={{ left: { md: "-6%" }, top: { md: 560 }, zIndex: 8, width: { xs: 240, md: 190 }, display: { xs: "none", md: "block" } }}>
-          <Box component="img" src={IMG.detail} alt="" draggable={false} sx={{ display: "block", width: "100%", height: 190, objectFit: "cover" }} />
-        </MacWindow>
-
-        {/* Lista con palomitas */}
-        <Box
-          component={motion.div}
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 2.6, duration: 0.8, ease }}
-          sx={{ position: { xs: "relative", md: "absolute" }, left: { md: "74%" }, top: { md: 470 }, zIndex: 8, width: { xs: "100%", md: 300 }, maxWidth: 360 }}
-        >
-          <Box sx={{ background: "#f4f4f4", color: ink, border: "1px solid #d8d8d8", borderRadius: "8px", padding: "1.1rem 1.2rem", boxShadow: "0 18px 40px rgba(0,0,0,0.1)" }}>
-            <AnimatePresence mode="wait">
-              <motion.div key={lang} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
-                <Box sx={{ fontSize: "0.86rem", lineHeight: 1.5, color: "#444", mb: 1.2 }}>{t.statement}</Box>
-                {t.checks.map((c, i) => (
-                  <Box key={c} sx={{ display: "flex", alignItems: "center", gap: 1.4, py: 0.8 }}>
-                    <Box sx={{ width: 26, height: 26, border: `2px solid ${blue}`, borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                      <svg width="16" height="14" viewBox="0 0 16 14" aria-hidden>
-                        <motion.path d="M1.5 7.5 L6 12 L14.5 1.5" fill="none" stroke={blue} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4, delay: 3 + i * 0.25 }} />
-                      </svg>
-                    </Box>
-                    <Box sx={{ fontSize: "0.95rem", lineHeight: 1.25 }}>{c}</Box>
-                  </Box>
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          </Box>
-        </Box>
-      </Box>
-
-        {/* Dock */}
-        <MacDock isDesktop={isDesktop} />
-        </Box>
-      </Box>
-      {/* Base de la laptop */}
-      <Box aria-hidden sx={{ display: { xs: "none", md: "block" }, position: "relative", height: 20, mx: "-3%", background: "linear-gradient(180deg, #e4e4e7, #97979d)", borderRadius: "2px 2px 24px 24px", boxShadow: "0 30px 60px rgba(0,0,0,0.7)" }}>
-        <Box sx={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 170, height: 7, background: "#7b7b81", borderRadius: "0 0 10px 10px" }} />
-      </Box>
-      </Box>
     </Box>
   );
 }
