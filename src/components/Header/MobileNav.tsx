@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Box, Typography } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -75,15 +76,19 @@ export default function MobileNav() {
         />
       </Box>
 
-      {/* Panel de navegación a pantalla completa */}
-      {open && (
+      {/* Panel de navegación a pantalla completa. Va en un portal a
+          <body>: el header tiene backdrop-filter al hacer scroll, y eso
+          vuelve al header el contenedor de los hijos "fixed", así que el
+          panel quedaba recortado a la franja del header. zIndex 99: debajo
+          del header (100) para que la cruz siga visible, encima del resto. */}
+      {open && createPortal(
         <Box
           sx={{
             display: { xs: "block", md: "none" },
             position: "fixed",
             inset: 0,
             backgroundColor: "rgba(0, 0, 0, 0.97)",
-            zIndex: 150,
+            zIndex: 99,
             padding: "6.5rem 2rem 2rem",
             overflowY: "auto",
           }}
@@ -143,7 +148,8 @@ export default function MobileNav() {
               </Box>
             ))}
           </Box>
-        </Box>
+        </Box>,
+        document.body
       )}
     </>
   );

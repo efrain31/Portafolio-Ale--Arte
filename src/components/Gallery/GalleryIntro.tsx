@@ -92,17 +92,17 @@ export default function GalleryIntro() {
   const [measured, setMeasured] = useState(false);
 
   // Calcula cuánto hay que desplazar horizontalmente el filmstrip para
-  // que la última imagen llegue al borde derecho del viewport. En desktop
-  // el sidebar es fijo (se descuenta su ancho); en mobile el sidebar va en
-  // el flujo normal arriba, así que cada imagen ocupa el ancho completo de
-  // pantalla (como un carrusel de una imagen a la vez).
+  // que su final llegue al borde derecho del viewport. En desktop la tira
+  // empieza con la columna negra del indicador de scroll y termina con el
+  // recuadro negro del menú, así que se suman ambos anchos; en
+  // mobile el menú va en el flujo normal debajo, y cada imagen ocupa el
+  // ancho completo de pantalla (como un carrusel de una imagen a la vez).
   useEffect(() => {
     const computeMax = () => {
       const isDesktop = window.innerWidth >= DESKTOP_BREAKPOINT;
       const itemWidth = isDesktop ? ITEM_WIDTH : window.innerWidth;
-      const trackWidth = featured.length * itemWidth;
-      const viewportWidth = isDesktop ? window.innerWidth - SIDEBAR_WIDTH : window.innerWidth;
-      setMaxTranslate(Math.max(trackWidth - viewportWidth, 0));
+      const trackWidth = featured.length * itemWidth + (isDesktop ? SIDEBAR_WIDTH * 2 : 0);
+      setMaxTranslate(Math.max(trackWidth - window.innerWidth, 0));
       setMeasured(true);
     };
     computeMax();
@@ -135,156 +135,35 @@ export default function GalleryIntro() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [maxTranslate, measured]);
 
+  const menuContent = <MenuContent />;
+  const menuPanelSx = {
+    width: { xs: "100%", md: SIDEBAR_WIDTH },
+    flexShrink: 0,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "3rem 2.5rem",
+    backgroundColor: "#000000",
+    // Menú oculto hasta terminar la tira de fotos; entra con un leve
+    // desplazamiento (el bloque de abajo con un pequeño retraso).
+    "& > .sidebar-block": {
+      opacity: reachedEnd ? 1 : 0,
+      transform: reachedEnd ? "none" : "translateY(18px)",
+      visibility: reachedEnd ? "visible" : "hidden",
+      transition: "opacity 0.8s ease, transform 0.8s cubic-bezier(0.22,1,0.36,1), visibility 0.8s",
+    },
+    "& > .sidebar-block:last-of-type": { transitionDelay: reachedEnd ? "0.25s" : "0s" },
+  } as const;
+
   return (
-    <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, minHeight: "100vh", backgroundColor: "#000000" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#000000" }}>
       {/* Portada de presentación (sólo móvil) antes del filmstrip */}
       <PortfolioCover />
 
-      {/* Sidebar */}
-      <Box
-        sx={{
-          width: SIDEBAR_WIDTH,
-          flexShrink: 0,
-          position: { xs: "static", md: "fixed" },
-          top: 0,
-          left: 0,
-          height: { xs: "auto", md: "100vh" },
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "3rem 2.5rem",
-          zIndex: 10,
-          // En mobile el sidebar va en el flujo normal (no fijo), así que
-          // el orden visual lo controla "order": las imágenes primero,
-          // el menú después. En desktop el sidebar es fijo y el order no
-          // aplica (queda a la izquierda por su position).
-          order: { xs: 2, md: 0 },
-          // Menú oculto hasta terminar la tira de fotos; entra con un leve
-          // desplazamiento (el bloque de abajo con un pequeño retraso).
-          "& > .sidebar-block": {
-            opacity: reachedEnd ? 1 : 0,
-            transform: reachedEnd ? "none" : "translateY(18px)",
-            visibility: reachedEnd ? "visible" : "hidden",
-            transition: "opacity 0.8s ease, transform 0.8s cubic-bezier(0.22,1,0.36,1), visibility 0.8s",
-          },
-          "& > .sidebar-block:last-of-type": { transitionDelay: reachedEnd ? "0.25s" : "0s" },
-        }}
-      >
-        {/* Indicador de scroll en el lugar del menú (escritorio) */}
-        <ScrollHint
-          visible={!reachedEnd}
-          sx={{ display: { xs: "none", md: "flex" }, inset: 0 }}
-        />
-
-        <Box className="sidebar-block">
-          <Link href="/" style={{ textDecoration: "none" }}>
-            <Typography
-              sx={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "1.4rem",
-                fontWeight: 600,
-                color: "white",
-                letterSpacing: "2px",
-                marginBottom: "3rem",
-                cursor: "pointer",
-                transition: "opacity 0.3s",
-                "&:hover": { opacity: 0.8 },
-              }}
-            >
-              ALE VÁZQUEZ
-            </Typography>
-          </Link>
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
-            <Link href="/portafolio" style={{ textDecoration: "none" }}>
-              <Typography
-                sx={{
-                  fontFamily: "'Inconsolata', monospace",
-                  fontSize: "0.85rem",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: "rgba(255, 255, 255, 0.9)",
-                  transition: "color 0.2s",
-                  "&:hover": { color: "white" },
-                }}
-              >
-                Home
-              </Typography>
-            </Link>
-
-            {navRoutes.map((route) => (
-              <Box key={route.basePath}>
-                <Typography
-                  sx={{
-                    fontFamily: "'Inconsolata', monospace",
-                    fontSize: "0.85rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "rgba(255, 255, 255, 0.9)",
-                    marginBottom: "0.6rem",
-                  }}
-                >
-                  {route.label}
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "0.4rem", paddingLeft: "0.75rem" }}>
-                  {route.items.map((item) => (
-                    <Link
-                      key={item}
-                      href={`/${route.basePath}/${normalizeSlug(item)}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Typography
-                        sx={{
-                          fontFamily: "'Inconsolata', monospace",
-                          fontSize: "0.7rem",
-                          letterSpacing: "0.1em",
-                          textTransform: "uppercase",
-                          color: "rgba(255, 255, 255, 0.55)",
-                          transition: "color 0.2s, padding-left 0.2s",
-                          "&:hover": { color: "white", paddingLeft: "0.3rem" },
-                        }}
-                      >
-                        {item}
-                      </Typography>
-                    </Link>
-                  ))}
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        <Box className="sidebar-block">
-          <Typography
-            sx={{
-              fontFamily: "'Inconsolata', monospace",
-              fontSize: "0.65rem",
-              letterSpacing: "0.05em",
-              color: "rgba(255, 255, 255, 0.4)",
-              marginBottom: "1rem",
-            }}
-          >
-            © {new Date().getFullYear()} Ale Vázquez. Todos los derechos reservados X LAPLACE COMPANY.
-          </Typography>
-          <Box sx={{ display: "flex", gap: "1.2rem" }}>
-            <a
-              href="https://www.instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "rgba(255,255,255,0.6)" }}
-            >
-              <InstagramIcon sx={{ fontSize: 20, "&:hover": { color: "white" } }} />
-            </a>
-            <a
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=alejandra@prueba.com&su=Interés%20en%20tus%20servicios%20de%20diseño%20y%20audiovisuales"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "rgba(255,255,255,0.6)" }}
-            >
-              <EmailIcon sx={{ fontSize: 20 }} />
-            </a>
-          </Box>
-        </Box>
+      {/* Menú en mobile: va en el flujo normal; "order" lo pone después
+          de las imágenes. En desktop se oculta: el mismo menú se pinta
+          como último recuadro de la tira (ver más abajo). */}
+      <Box sx={{ ...menuPanelSx, display: { xs: "flex", md: "none" }, order: 2 }}>
+        {menuContent}
       </Box>
 
       {/* Sección de scroll: su altura extra (100vh + maxTranslate) es lo
@@ -292,11 +171,11 @@ export default function GalleryIntro() {
       <Box
         id="gallery-scroll-section"
         sx={{
-          marginLeft: { xs: 0, md: `${SIDEBAR_WIDTH}px` },
           width: "100%",
+          minWidth: 0,
           height: maxTranslate > 0 ? `calc(100vh + ${maxTranslate}px)` : "100vh",
           position: "relative",
-          order: { xs: 1, md: 0 },
+          order: 1,
         }}
       >
         {/* Mientras la sección pasa por el viewport, este contenedor queda
@@ -337,6 +216,65 @@ export default function GalleryIntro() {
               willChange: "transform",
             }}
           >
+            {/* Desktop: al abrir la vista, la tira empieza con la columna
+                negra de portada (como la portada de móvil) y el indicador
+                "DESLIZA"; se va con las fotos al desplazar. */}
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                position: "relative",
+                width: SIDEBAR_WIDTH,
+                flexShrink: 0,
+                height: "100%",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                alignItems: "center",
+                textAlign: "center",
+                padding: "3rem 1.5rem 10rem",
+                backgroundColor: "#000000",
+                color: "white",
+              }}
+            >
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.6 }}
+                transition={{ duration: 1 }}
+                style={{ fontFamily: "'Inconsolata', monospace", fontSize: "0.7rem", letterSpacing: "0.45em" }}
+              >
+                ALE VÁZQUEZ — {new Date().getFullYear()}
+              </motion.span>
+
+              <Box>
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic", fontWeight: 300, fontSize: "3.6rem", lineHeight: 1, textTransform: "none", letterSpacing: 0 }}
+                >
+                  Portafolio
+                </motion.h1>
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 1, delay: 0.4 }}
+                  style={{ height: 1, background: "rgba(255,255,255,0.5)", margin: "1.5rem auto", width: 120 }}
+                />
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.7 }}
+                  style={{ display: "flex", flexDirection: "column", gap: "0.7rem", fontFamily: "'Inconsolata', monospace", fontSize: "0.75rem", letterSpacing: "0.35em", color: "rgba(255,255,255,0.75)" }}
+                >
+                  <span>01 · MODELAJE</span>
+                  <span>02 · FOTOGRAFÍA</span>
+                  <span>03 · DISEÑO</span>
+                </motion.div>
+              </Box>
+
+              <span />
+              <ScrollHint visible={!reachedEnd} sx={{ display: "flex", left: 0, right: 0, bottom: "3rem" }} />
+            </Box>
+
             {featured.map((item) => (
               <Link
                 key={item.src}
@@ -380,9 +318,172 @@ export default function GalleryIntro() {
                 </Box>
               </Link>
             ))}
+
+            {/* Desktop: el menú es el último recuadro negro de la tira y
+                aparece al terminar de recorrerla. */}
+            <Box sx={{ ...menuPanelSx, display: { xs: "none", md: "flex" }, height: "100%" }}>
+              {menuContent}
+            </Box>
           </Box>
         </Box>
       </Box>
     </Box>
+  );
+}
+
+// Contenido del menú (logo, navegación, copyright y redes). Se pinta en dos
+// lugares: debajo de las fotos en mobile y al final de la tira en desktop.
+function MenuContent() {
+  return (
+    <>
+      <Box className="sidebar-block" sx={{ marginBottom: { xs: "4rem", md: 0 } }}>
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <Typography
+            sx={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "1.4rem",
+              fontWeight: 600,
+              color: "white",
+              letterSpacing: "2px",
+              marginBottom: { xs: "1.5rem", md: "3rem" },
+              cursor: "pointer",
+              transition: "opacity 0.3s",
+              "&:hover": { opacity: 0.8 },
+            }}
+          >
+            ALE VÁZQUEZ
+          </Typography>
+        </Link>
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "1.75rem" }}>
+          {/* Escritorio: "Home" como texto, igual que el resto del menú */}
+          <Link href="/portafolio" style={{ textDecoration: "none" }}>
+            <Typography
+              sx={{
+                display: { xs: "none", md: "block" },
+                fontFamily: "'Inconsolata', monospace",
+                fontSize: "0.85rem",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "rgba(255, 255, 255, 0.9)",
+                transition: "color 0.2s",
+                "&:hover": { color: "white" },
+              }}
+            >
+              Home
+            </Typography>
+          </Link>
+
+          {/* Móvil: "Home" es el único acceso: texto con una flecha fina
+              hacia la derecha que se mueve suave para invitar a entrar. */}
+          <Box sx={{ display: { xs: "flex", md: "none" }, justifyContent: "flex-start" }}>
+            <Link href="/portafolio" style={{ textDecoration: "none" }}>
+              <motion.div
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                style={{ display: "flex", alignItems: "center", gap: "1rem", padding: "0.5rem 0" }}
+              >
+                <Typography
+                  sx={{
+                    fontFamily: "'Inconsolata', monospace",
+                    fontSize: "1.6rem",
+                    letterSpacing: "0.3em",
+                    textTransform: "uppercase",
+                    color: "white",
+                  }}
+                >
+                  Home
+                </Typography>
+                <motion.svg
+                  width="48"
+                  height="16"
+                  viewBox="0 0 36 12"
+                  aria-hidden
+                  animate={{ x: [0, 6, 0] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <path d="M0 6 H34 M28 1 L34 6 L28 11" fill="none" stroke="white" strokeWidth="1" />
+                </motion.svg>
+              </motion.div>
+            </Link>
+          </Box>
+
+          {/* Submenú sólo en escritorio */}
+          <Box sx={{ display: { xs: "none", md: "flex" }, flexDirection: "column", gap: "1.75rem" }}>
+            {navRoutes.map((route) => (
+              <Box key={route.basePath}>
+                <Typography
+                  sx={{
+                    fontFamily: "'Inconsolata', monospace",
+                    fontSize: "0.85rem",
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: "rgba(255, 255, 255, 0.9)",
+                    marginBottom: "0.6rem",
+                  }}
+                >
+                  {route.label}
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: "0.4rem", paddingLeft: "0.75rem" }}>
+                  {route.items.map((item) => (
+                    <Link
+                      key={item}
+                      href={`/${route.basePath}/${normalizeSlug(item)}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Typography
+                        sx={{
+                          fontFamily: "'Inconsolata', monospace",
+                          fontSize: "0.7rem",
+                          letterSpacing: "0.1em",
+                          textTransform: "uppercase",
+                          color: "rgba(255, 255, 255, 0.55)",
+                          transition: "color 0.2s, padding-left 0.2s",
+                          "&:hover": { color: "white", paddingLeft: "0.3rem" },
+                        }}
+                      >
+                        {item}
+                      </Typography>
+                    </Link>
+                  ))}
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+
+      <Box className="sidebar-block">
+        <Typography
+          sx={{
+            fontFamily: "'Inconsolata', monospace",
+            fontSize: "0.65rem",
+            letterSpacing: "0.05em",
+            color: "rgba(255, 255, 255, 0.4)",
+            marginBottom: "1rem",
+          }}
+        >
+          © {new Date().getFullYear()} Ale Vázquez. Todos los derechos reservados X LAPLACE COMPANY.
+        </Typography>
+        <Box sx={{ display: "flex", gap: "1.2rem" }}>
+          <a
+            href="https://www.instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "rgba(255,255,255,0.6)" }}
+          >
+            <InstagramIcon sx={{ fontSize: 20, "&:hover": { color: "white" } }} />
+          </a>
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=alejandra@prueba.com&su=Interés%20en%20tus%20servicios%20de%20diseño%20y%20audiovisuales"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "rgba(255,255,255,0.6)" }}
+          >
+            <EmailIcon sx={{ fontSize: 20 }} />
+          </a>
+        </Box>
+      </Box>
+    </>
   );
 }
